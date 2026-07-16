@@ -12,7 +12,7 @@ import { featureTestBoundariesConfig, layerBoundariesConfig, reactQueryBoundarie
 
 export default tsEslint.config(
   {
-    ignores: ['.next/**', 'node_modules/**', 'out/**', 'build/**', 'dist/**', './next-env.d.ts'],
+    ignores: ['.next/**', 'node_modules/**', 'out/**', 'build/**', 'dist/**', 'public/**', './next-env.d.ts'],
   },
   js.configs.recommended,
   ...tsEslint.configs.recommended,

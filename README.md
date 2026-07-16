@@ -145,9 +145,34 @@ src/
 ## Темизация
 
 Темы описаны CSS-переменными в `src/assets/styles/themes.scss` и переключаются атрибутом
-`data-theme` на `<html>`. `ThemeProvider` читает тему из cookie на сервере (корректный
-первый рендер) и обновляет её без мигания. Компоненты используют только токены (`--ink`,
-`--surface`, `--accent`, `--panel-*` и т.д.), поэтому обе темы работают из коробки.
+`data-theme` на `<html>`. Выбор хранится в `localStorage`; чтобы не было «мигания» при
+загрузке, небольшой inline-скрипт в `<head>` проставляет тему до первой отрисовки. Компоненты
+используют только токены (`--ink`, `--surface`, `--accent`, `--panel-*` и т.д.), поэтому обе
+темы работают из коробки.
+
+## Деплой (GitHub Pages)
+
+Проект собирается в статический экспорт (`output: 'export'`) и деплоится на GitHub Pages
+через GitHub Actions ([.github/workflows/deploy.yml](.github/workflows/deploy.yml)).
+
+Как включить:
+
+1. **Settings → Pages → Source: GitHub Actions**.
+2. Завести переменные окружения (**Settings → Secrets and variables → Actions → Variables**):
+   - `NEXT_PUBLIC_BASE_URL` — базовый URL HTTP-клиента;
+   - `NEXT_PUBLIC_BINANCE_API_URL` — WebSocket-поток Binance;
+   - `NEXT_PUBLIC_SITE_URL` — полный адрес сайта (например `https://<user>.github.io/self-presentation/`),
+     нужен для абсолютного `og:image` в мета-тегах.
+3. Пушнуть в `main` — workflow соберёт `out/` и опубликует.
+
+`basePath` задаётся в workflow через `NEXT_PUBLIC_BASE_PATH` (по имени репозитория, например
+`/self-presentation`); та же переменная используется для путей к статике (текстуры глобуса).
+Для локальной проверки экспорта: `NEXT_PUBLIC_BASE_PATH=/self-presentation npm run build`
+и раздать каталог `out/` любым статическим сервером.
+
+Favicon — [app/icon.svg](app/icon.svg) (буква «V» на фоне blueprint). Картинка для соцсетей —
+[public/og.png](public/og.png) (1200×630), сгенерирована через `next/og`; подключается в
+`openGraph`/`twitter` метаданных [app/layout.tsx](app/layout.tsx).
 
 ## Качество кода
 

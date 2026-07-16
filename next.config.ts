@@ -3,8 +3,15 @@ import { NextConfig } from 'next';
 
 type WebpackConfiguration = Parameters<NonNullable<NextConfig['webpack']>>[0];
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+
 const nextConfig: NextConfig = {
-  output: 'standalone',
+  output: 'export',
+  basePath,
+  trailingSlash: true,
+  images: {
+    unoptimized: true,
+  },
   sassOptions: {
     // Allow `@use '<dir>/...'` to resolve against `src/` (legacy includePaths).
     includePaths: [path.join(process.cwd(), 'src')],

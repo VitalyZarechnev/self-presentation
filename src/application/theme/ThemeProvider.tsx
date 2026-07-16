@@ -2,10 +2,9 @@
 
 import { createContext, PropsWithChildren, useContext, useState } from 'react';
 
-import { cookies } from '@utils/cookies';
 import { useIsomorphicLayoutEffect } from '@utils/hooks/useIsomorphicLayoutEffect';
 
-import { DEFAULT_THEME, THEME_COOKIE, THEMES, TTheme } from './themes';
+import { DEFAULT_THEME, isTheme, THEME_STORAGE_KEY, THEMES, TTheme } from './themes';
 
 type TThemeContext = {
   theme: TTheme;
@@ -21,18 +20,21 @@ const ThemeContext = createContext<TThemeContext>({
 
 export const useTheme = (): TThemeContext => useContext(ThemeContext);
 
-type TProps = {
-  initialTheme: TTheme;
-};
+export default function ThemeProvider({ children }: PropsWithChildren) {
+  const [theme, setTheme] = useState<TTheme>(DEFAULT_THEME);
 
-export default function ThemeProvider(props: PropsWithChildren & TProps) {
-  const { initialTheme, children } = props;
-
-  const [theme, setTheme] = useState<TTheme>(initialTheme);
+  useIsomorphicLayoutEffect(() => {
+    const applied = document.documentElement.dataset.theme;
+    if (isTheme(applied)) setTheme(applied);
+  }, []);
 
   useIsomorphicLayoutEffect(() => {
     document.documentElement.dataset.theme = theme;
-    cookies.set(THEME_COOKIE, theme, { path: '/', maxAge: 86400 * 365, sameSite: 'lax' });
+    try {
+      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch {
+      return;
+    }
   }, [theme]);
 
   return <ThemeContext.Provider value={{ theme, themes: THEMES, setTheme }}>{children}</ThemeContext.Provider>;

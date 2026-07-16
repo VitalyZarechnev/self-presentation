@@ -4,7 +4,7 @@ export type TTheme = (typeof THEMES)[number];
 
 export const DEFAULT_THEME: TTheme = 'blueprint';
 
-export const THEME_COOKIE = 'ui-theme';
+export const THEME_STORAGE_KEY = 'ui-theme';
 
 export const THEME_LABELS: Record<TTheme, string> = {
   'barely-there': 'Barely-There',

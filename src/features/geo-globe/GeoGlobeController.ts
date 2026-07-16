@@ -13,6 +13,8 @@ const PIN_REF_ZOOM = 4.4;
 const PIN_HIT_RADIUS = 22;
 const TAP_SLOP = 6;
 
+const ASSET_PREFIX = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+
 export type GeoGlobeOptions = {
   mount: HTMLElement;
   labels: readonly (HTMLElement | null)[];
@@ -98,7 +100,7 @@ export class GeoGlobeController {
     this.scene.add(this.globe);
 
     this.maxAnisotropy = this.renderer.capabilities.getMaxAnisotropy();
-    this.texture = new THREE.TextureLoader().load('/textures/earth.jpg', () => {
+    this.texture = new THREE.TextureLoader().load(`${ASSET_PREFIX}/textures/earth.jpg`, () => {
       this.needsRender = true;
     });
     this.texture.colorSpace = THREE.SRGBColorSpace;
@@ -203,7 +205,7 @@ export class GeoGlobeController {
 
   private loadHiRes(): void {
     if (this.hiResTexture) return;
-    this.hiResTexture = new THREE.TextureLoader().load('/textures/earth-4k.jpg', (loaded) => {
+    this.hiResTexture = new THREE.TextureLoader().load(`${ASSET_PREFIX}/textures/earth-4k.jpg`, (loaded) => {
       if (this.disposed) {
         loaded.dispose();
         return;
