@@ -1,0 +1,221 @@
+@use '@assets/mixins/scrollbar' as *;
+
+.gantt {
+  padding: 18px 20px;
+  color: var(--ink);
+  background: var(--panel-surface);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--panel-radius);
+
+  &__scroll {
+    overflow-x: auto;
+    padding-bottom: 4px;
+
+    @include nice-scrollbar;
+  }
+
+  &__inner {
+    min-width: 560px;
+  }
+
+  &__group {
+    border-bottom: 1px solid var(--surface-grid);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__row {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    align-items: center;
+    height: 60px;
+    padding: 0 10px;
+
+    &:not(.gantt__row_axis):hover {
+      background: var(--accent-soft);
+    }
+
+    &:hover .gantt__bar {
+      filter: brightness(1.08);
+    }
+  }
+
+  &__row_button {
+    width: 100%;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  &__row_axis {
+    height: 30px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  &__meta {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    overflow: hidden;
+    padding-right: 14px;
+  }
+
+  &__meta_text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__chevron {
+    flex: none;
+    width: 12px;
+    height: 12px;
+    margin-top: 3px;
+    color: var(--ink-muted);
+    transition: transform 0.15s ease;
+  }
+
+  &__chevron_open {
+    transform: rotate(180deg);
+  }
+
+  &__company {
+    display: block;
+  }
+
+  &__role {
+    display: block;
+    margin-top: 2px;
+    color: var(--ink-muted);
+  }
+
+  &__period {
+    display: block;
+    margin-top: 5px;
+    color: var(--ink-muted);
+  }
+
+  &__axis {
+    position: relative;
+    height: 100%;
+  }
+
+  &__tick {
+    position: absolute;
+    bottom: 6px;
+    transform: translateX(-50%);
+    color: var(--ink-muted);
+  }
+
+  &__track {
+    position: relative;
+    height: 100%;
+    background-image: repeating-linear-gradient(90deg, var(--grid-column) 0 1px, transparent 1px var(--gantt-grid, 10%));
+  }
+
+  &__bar {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 6px;
+    height: 22px;
+    padding: 0 6px;
+    background: var(--accent);
+    border-radius: 5px;
+    transition: filter 0.12s ease;
+  }
+
+  &__bar_ongoing {
+    -webkit-mask-image: linear-gradient(90deg, #000 78%, rgba(0, 0, 0, 0.35));
+    mask-image: linear-gradient(90deg, #000 78%, rgba(0, 0, 0, 0.35));
+  }
+
+  &__now {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--surface-raised);
+  }
+
+  &__segment {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+    height: 22px;
+    border-radius: 5px 0 0 5px;
+  }
+
+  &__segment_accent {
+    background: var(--accent);
+  }
+
+  &__segment_danger {
+    background: var(--danger);
+  }
+
+  &__legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--surface-grid);
+  }
+
+  &__legend_item {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--ink-muted);
+  }
+
+  &__swatch {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+  }
+
+  &__swatch_accent {
+    background: var(--accent);
+  }
+
+  &__swatch_danger {
+    background: var(--danger);
+  }
+
+  &__details {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    max-width: 680px;
+    margin: 0;
+    padding: 2px 20px 16px 2px;
+    list-style: none;
+  }
+
+  &__detail {
+    position: relative;
+    padding-left: 16px;
+    color: var(--ink-muted);
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 2px;
+      top: 8px;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+  }
+}

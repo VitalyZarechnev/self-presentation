@@ -1,0 +1,39 @@
+@use '@assets/mixins/hover' as *;
+
+.action {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border: 1px solid var(--accent);
+  border-radius: var(--panel-radius);
+  color: var(--accent);
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+
+  &_secondary {
+    background: transparent;
+    color: var(--accent);
+
+    @include hover {
+      background: var(--accent);
+      color: var(--surface);
+    }
+  }
+
+  &_primary {
+    background: var(--accent);
+    color: var(--surface);
+
+    @include hover {
+      background: transparent;
+      color: var(--accent);
+    }
+  }
+}

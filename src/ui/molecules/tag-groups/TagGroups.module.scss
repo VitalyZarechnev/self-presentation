@@ -1,0 +1,23 @@
+@use '@assets/styles/breakpoints' as *;
+
+.tag_groups {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px 32px;
+
+  &__title {
+    display: block;
+    margin-bottom: 12px;
+    color: var(--ink-muted);
+  }
+
+  &__items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    grid-template-columns: 1fr;
+  }
+}

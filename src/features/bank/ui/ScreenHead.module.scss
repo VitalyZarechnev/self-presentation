@@ -1,0 +1,27 @@
+@use './colors' as *;
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0 12px;
+}
+
+.back {
+  display: flex;
+  padding: 0;
+  background: none;
+  border: none;
+  color: $ink;
+  cursor: pointer;
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.title {
+  font-size: 17px;
+  font-weight: 600;
+}

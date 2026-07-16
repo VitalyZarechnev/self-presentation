@@ -1,0 +1,13 @@
+@mixin fluid-viewport-height($property: height, $offset: 0) {
+  @if $offset == 0 {
+    #{$property}: 100vh;
+    @supports (height: 100dvh) {
+      #{$property}: 100dvh;
+    }
+  } @else {
+    #{$property}: calc(100vh - #{$offset});
+    @supports (height: 100dvh) {
+      #{$property}: calc(100dvh - #{$offset});
+    }
+  }
+}

@@ -1,0 +1,61 @@
+@use './ui/colors' as *;
+
+.app {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.body {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  padding: 4px 16px 16px;
+  animation: slide 0.26s ease;
+}
+
+@keyframes slide {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+}
+
+.nav {
+  display: flex;
+  flex: 0 0 auto;
+  padding: 9px 4px 14px;
+  background: #fff;
+  border-top: 0.5px solid $line;
+}
+
+.tab {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 11px;
+  color: #a2a2aa;
+
+  svg {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+.tabOn {
+  color: $brand;
+}

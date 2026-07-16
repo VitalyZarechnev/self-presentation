@@ -1,0 +1,207 @@
+@use './colors' as *;
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: flex-end;
+  background: rgb(12 12 14 / 38%);
+  animation: fade 0.18s ease;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+.sheet {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 10px 18px 22px;
+  background: #fff;
+  border-radius: 24px 24px 38px 38px;
+  animation: rise 0.24s ease;
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(60%);
+  }
+}
+
+.grip {
+  width: 40px;
+  height: 4px;
+  margin-bottom: 14px;
+  border-radius: 2px;
+  background: #d8d8de;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+
+  svg {
+    width: 26px;
+    height: 26px;
+  }
+}
+
+.title {
+  margin-top: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  color: $ink;
+  text-align: center;
+}
+
+.category {
+  margin-top: 2px;
+  font-size: 12px;
+  color: $muted;
+}
+
+.amount {
+  margin-top: 10px;
+  font-size: 28px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: $ink;
+}
+
+.amountIncome {
+  color: $income;
+}
+
+.info {
+  width: 100%;
+  margin: 18px 0 16px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 0;
+  border-bottom: 0.5px solid $line;
+}
+
+.rowLabel {
+  font-size: 13px;
+  color: $muted;
+}
+
+.rowValue {
+  font-size: 13px;
+  color: $ink;
+  text-align: right;
+}
+
+.ok {
+  font-size: 13px;
+  font-weight: 600;
+  color: $income;
+}
+
+.primary {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 14px;
+  background: $brand;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.secondary {
+  width: 100%;
+  margin-top: 14px;
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+  background: $brand-soft;
+  color: $brand;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.receipt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.receiptHead {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding-bottom: 14px;
+}
+
+.receiptBank {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: $brand;
+}
+
+.receiptKind {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $muted;
+}
+
+.receiptAmount {
+  padding: 6px 0 14px;
+  font-size: 26px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: $ink;
+}
+
+.receiptRows {
+  width: 100%;
+  padding: 14px 0;
+  border-top: 1.5px dashed $line;
+  border-bottom: 1.5px dashed $line;
+}
+
+.rRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 5px 0;
+  font-size: 12.5px;
+
+  span:first-child {
+    color: $muted;
+  }
+
+  span:last-child {
+    color: $ink;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.receiptFoot {
+  padding: 14px 0 4px;
+  font-size: 12px;
+  color: $muted;
+}

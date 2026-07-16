@@ -1,0 +1,47 @@
+@use '@assets/styles/breakpoints' as *;
+
+.works_view {
+  position: relative;
+  min-height: 100vh;
+  color: var(--ink);
+
+  background-color: var(--surface);
+  background-image:
+    linear-gradient(var(--surface-grid) 1px, transparent 1px), linear-gradient(90deg, var(--surface-grid) 1px, transparent 1px);
+  background-size: var(--surface-grid-cell) var(--surface-grid-cell);
+
+  &::after {
+    content: '';
+    position: fixed;
+    inset: 12px;
+    border: 1px solid var(--page-frame);
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 120px;
+  }
+
+  &__back {
+    align-self: flex-start;
+  }
+
+  &__head {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+
+  &__sub {
+    max-width: 60ch;
+    color: var(--ink-muted);
+  }
+}

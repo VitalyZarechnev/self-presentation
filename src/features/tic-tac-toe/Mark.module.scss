@@ -1,0 +1,21 @@
+.mark path {
+  stroke: var(--accent);
+  stroke-width: 8;
+}
+
+.mark_erasing {
+  animation: ttt-mark-erase 0.6s ease forwards;
+}
+
+@keyframes ttt-mark-erase {
+  to {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mark_erasing {
+    animation: none;
+    opacity: 0;
+  }
+}

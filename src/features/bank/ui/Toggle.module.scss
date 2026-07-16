@@ -1,0 +1,44 @@
+@use './colors' as *;
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 2px;
+  background: none;
+  border: none;
+  border-bottom: 0.5px solid $line;
+  cursor: pointer;
+  font-size: 14px;
+  color: $ink;
+}
+
+.track {
+  position: relative;
+  width: 42px;
+  height: 24px;
+  flex: 0 0 auto;
+  border-radius: 12px;
+  background: #d6d6dc;
+  transition: background 0.18s ease;
+}
+
+.on {
+  background: $brand;
+}
+
+.knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.18s ease;
+
+  .on & {
+    transform: translateX(18px);
+  }
+}

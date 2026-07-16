@@ -1,0 +1,135 @@
+@use '@assets/styles/breakpoints' as *;
+
+.home_view {
+  --header-h: 57px;
+
+  position: relative;
+  min-height: 100vh;
+  color: var(--ink);
+
+  background-color: var(--surface);
+  background-image:
+    linear-gradient(var(--surface-grid) 1px, transparent 1px), linear-gradient(90deg, var(--surface-grid) 1px, transparent 1px);
+  background-size: var(--surface-grid-cell) var(--surface-grid-cell);
+
+  &::after {
+    content: '';
+    position: fixed;
+    inset: 12px;
+    border: 1px solid var(--page-frame);
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  &__hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    min-height: calc(100vh - var(--header-h));
+    padding: 24px;
+    text-align: center;
+
+    @media (max-width: $breakpoint-mobile) {
+      min-height: 0;
+      justify-content: flex-start;
+      gap: 14px;
+      padding: 24px 24px 8px;
+    }
+  }
+
+  &__eyebrow {
+    color: var(--ink-muted);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  & &__title {
+    max-width: 22ch;
+    color: var(--ink);
+    font-weight: 400;
+    font-size: 54px;
+    line-height: 1.08;
+
+    @media (max-width: $breakpoint-mobile) {
+      font-size: 32px;
+    }
+  }
+
+  &__lead {
+    max-width: 34ch;
+    color: var(--ink-muted);
+  }
+
+  &__domains {
+    max-width: 46ch;
+    color: var(--ink-muted);
+  }
+
+  &__cta {
+    margin-top: 14px;
+  }
+
+  &__game {
+    align-self: stretch;
+    margin-top: 28px;
+    margin-left: var(--surface-grid-cell);
+
+    @media (max-width: $breakpoint-mobile) {
+      margin-left: 0;
+    }
+  }
+
+  &__content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 88px;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px 120px 44px;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 120px;
+      left: 20px;
+      width: 1px;
+      background: var(--margin-rule);
+    }
+
+    @media (max-width: $breakpoint-mobile) {
+      padding-left: 28px;
+
+      &::before {
+        left: 12px;
+      }
+    }
+  }
+
+  &__section_head {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 26px;
+  }
+
+  &__section_index {
+    flex: none;
+    padding-top: 8px;
+    color: var(--ink-muted);
+  }
+
+  &__section_titles {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  & &__section_sub {
+    max-width: 60ch;
+    color: var(--ink-muted);
+    font-size: 14px;
+  }
+}

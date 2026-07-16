@@ -1,0 +1,25 @@
+.experience {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+  &__stage {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  &__pane {
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 0;
+    transition:
+      opacity 0.28s ease,
+      transform 0.28s ease;
+  }
+
+  &__pane_hidden {
+    opacity: 0;
+    transform: translateY(6px);
+    pointer-events: none;
+  }
+}

@@ -1,0 +1,140 @@
+@use '@assets/styles/breakpoints' as *;
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: var(--surface-blur);
+  border-bottom: 1px solid var(--line);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.inner {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 10px 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 10px 24px;
+
+  @media (max-width: $breakpoint-mobile) {
+    gap: 10px;
+    padding: 8px 14px;
+  }
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  flex: none;
+  line-height: 1.15;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.name {
+  font-size: 15px;
+  font-weight: 600;
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 14px;
+  }
+}
+
+.role {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--ink-muted);
+}
+
+.nav {
+  display: flex;
+  gap: 6px 16px;
+  margin: 0 auto;
+
+  @media (max-width: 860px) {
+    display: none;
+  }
+}
+
+.navLink {
+  color: var(--ink-muted);
+  font-size: 13px;
+  text-decoration: none;
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: var(--ink);
+  }
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+  flex: none;
+
+  @media (max-width: $breakpoint-mobile) {
+    gap: 8px;
+  }
+}
+
+.theme {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  background: var(--accent-soft);
+  border: 1px solid var(--line);
+}
+
+.themeOption {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  color: var(--ink-muted);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease;
+
+  &:hover {
+    color: var(--ink);
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    padding: 7px 9px;
+  }
+}
+
+.themeOptionActive {
+  color: var(--ink);
+  background: var(--surface-raised);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 8%);
+}
+
+.themeIcon {
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+
+@media (max-width: $breakpoint-mobile) {
+  .themeLabel {
+    display: none;
+  }
+}
+
+.header .cta {
+  padding: 8px 14px;
+  font-size: 13px;
+
+  @media (max-width: $breakpoint-mobile) {
+    padding: 7px 11px;
+  }
+}

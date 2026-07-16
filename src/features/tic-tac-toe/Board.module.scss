@@ -1,0 +1,265 @@
+@use '@assets/mixins/hover' as *;
+
+.board {
+  position: relative;
+  width: calc(var(--ttt-cell, 56px) * 3);
+  height: calc(var(--ttt-cell, 56px) * 3);
+}
+
+.board__draw {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+
+  path {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: ttt-draw 0.4s ease var(--draw-delay, 0s) forwards;
+  }
+}
+
+.board__draw_erasing > path {
+  animation: ttt-erase 2s ease forwards;
+}
+
+.board__grid {
+  stroke: var(--accent);
+  stroke-width: 2.5;
+  opacity: 0.5;
+}
+
+.board__win {
+  stroke: var(--danger);
+  stroke-width: 6;
+}
+
+.board__draw_notice {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 3;
+  padding: 6px 14px;
+  color: var(--positive);
+  background: var(--surface);
+  border: 1.5px solid var(--positive);
+  border-radius: 6px;
+  box-shadow: 0 4px 14px rgb(0 0 0 / 18%);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.board__draw_notice_button {
+  cursor: pointer;
+  pointer-events: auto;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease;
+
+  @include hover {
+    color: var(--surface);
+    background: var(--positive);
+  }
+}
+
+.board__erase {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.board__eraser {
+  position: absolute;
+  width: 34%;
+  height: 15%;
+  background: var(--eraser);
+  border-radius: 3px;
+  box-shadow:
+    inset 0 -30% 0 var(--eraser-shade),
+    0 2px 5px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  animation: ttt-eraser 2s ease-in-out forwards;
+}
+
+.board__smudge {
+  position: absolute;
+  width: 42%;
+  height: 34%;
+  background: radial-gradient(closest-side, var(--surface) 55%, transparent 100%);
+  opacity: 0;
+  animation: ttt-smudge 2s ease-in-out forwards;
+}
+
+.board__crumb {
+  position: absolute;
+  background: var(--ink);
+  border-radius: 50%;
+  opacity: 0;
+  animation: ttt-crumb 0.9s ease-in var(--crumb-delay, 0s) forwards;
+}
+
+.board__cells {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+}
+
+.board__cell {
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:disabled {
+    cursor: default;
+  }
+
+  &:not(:disabled) {
+    @include hover {
+      background: var(--accent-soft);
+    }
+  }
+}
+
+@keyframes ttt-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes ttt-erase {
+  to {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+}
+
+@keyframes ttt-eraser {
+  0% {
+    left: -30%;
+    top: 3%;
+    transform: rotate(-14deg);
+    opacity: 0;
+  }
+
+  8% {
+    opacity: 1;
+  }
+
+  25% {
+    left: 66%;
+    top: 6%;
+    transform: rotate(-14deg);
+  }
+
+  45% {
+    left: 2%;
+    top: 34%;
+    transform: rotate(-17deg);
+  }
+
+  65% {
+    left: 64%;
+    top: 56%;
+    transform: rotate(-11deg);
+  }
+
+  82% {
+    left: 0%;
+    top: 74%;
+    opacity: 1;
+    transform: rotate(-15deg);
+  }
+
+  100% {
+    left: 115%;
+    top: 82%;
+    opacity: 0;
+    transform: rotate(-8deg);
+  }
+}
+
+@keyframes ttt-smudge {
+  0% {
+    left: -35%;
+    top: 0%;
+    opacity: 0;
+  }
+
+  12% {
+    opacity: 0.85;
+  }
+
+  25% {
+    left: 56%;
+    top: 2%;
+  }
+
+  45% {
+    left: -6%;
+    top: 30%;
+  }
+
+  65% {
+    left: 54%;
+    top: 52%;
+  }
+
+  82% {
+    left: -8%;
+    top: 70%;
+    opacity: 0.85;
+  }
+
+  100% {
+    left: 108%;
+    top: 78%;
+    opacity: 0;
+  }
+}
+
+@keyframes ttt-crumb {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+
+  20% {
+    opacity: 0.85;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(var(--crumb-dx, 0), var(--crumb-dy, 20px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .board__draw path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+
+  .board__draw_erasing > path {
+    animation: none;
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+
+  .board__eraser,
+  .board__smudge,
+  .board__crumb {
+    animation: none;
+    opacity: 0;
+  }
+}

@@ -1,0 +1,26 @@
+@use '@assets/mixins/hover' as *;
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  color: var(--ink-muted);
+  background: var(--accent-soft);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.15s ease;
+
+  @include hover {
+    color: var(--ink);
+    border-color: var(--accent);
+    transform: translateY(-1px);
+  }
+}

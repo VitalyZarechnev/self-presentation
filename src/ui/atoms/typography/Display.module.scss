@@ -1,0 +1,16 @@
+@use '@assets/styles/breakpoints' as *;
+
+.display {
+  color: inherit;
+  font-family: var(--font-display);
+}
+
+.display_lead {
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.3;
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 18px;
+  }
+}

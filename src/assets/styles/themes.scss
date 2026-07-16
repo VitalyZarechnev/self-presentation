@@ -1,0 +1,72 @@
+@mixin barely-there {
+  --surface: #faf7f0;
+  --surface-raised: #fffdf8;
+  --surface-blur: rgba(250, 247, 240, 0.7);
+  --surface-grid: #e9e4d8;
+  --surface-grid-cell: 42px;
+  --grid-column: #ddd7c8;
+  --line: #d9d3c6;
+
+  --ink: #20201d;
+  --ink-muted: #737168;
+  --accent: #20201d;
+  --accent-soft: #efeae0;
+  --danger: #d64545;
+  --positive: #2f8f5b;
+  --eraser: #eaa7b2;
+  --eraser-shade: #cf8391;
+
+  --font-display: var(--font-playfair), Georgia, serif;
+  --font-body: var(--font-inter), system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+  --heading-transform: none;
+  --heading-tracking: -0.01em;
+
+  --panel-surface: var(--surface);
+  --panel-line: transparent;
+  --panel-radius: 0;
+
+  --margin-rule: #e2a8a8;
+  --page-frame: transparent;
+}
+
+@mixin blueprint {
+  --surface: #0e2233;
+  --surface-raised: #123049;
+  --surface-blur: rgba(14, 34, 51, 0.55);
+  --surface-grid: rgba(120, 170, 230, 0.1);
+  --surface-grid-cell: 42px;
+  --grid-column: rgba(120, 170, 230, 0.2);
+  --line: #1f4a70;
+
+  --ink: #eaf3ff;
+  --ink-muted: #82abd6;
+  --accent: #5db0ff;
+  --accent-soft: rgba(93, 176, 255, 0.14);
+  --danger: #ff6b6b;
+  --positive: #5ad38f;
+  --eraser: #7fa8cc;
+  --eraser-shade: #55809f;
+
+  --font-display: var(--font-plex-mono), ui-monospace, monospace;
+  --font-body: var(--font-inter), system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+  --heading-transform: uppercase;
+  --heading-tracking: 0.06em;
+
+  --panel-surface: var(--surface-raised);
+  --panel-line: var(--line);
+  --panel-radius: 0;
+
+  --margin-rule: transparent;
+  --page-frame: rgba(93, 176, 255, 0.28);
+}
+
+:root,
+[data-theme='barely-there'] {
+  @include barely-there;
+}
+
+[data-theme='blueprint'] {
+  @include blueprint;
+}

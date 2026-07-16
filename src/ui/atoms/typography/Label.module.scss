@@ -1,0 +1,55 @@
+.label {
+  color: inherit;
+  font-family: var(--font-mono);
+}
+
+.label_eyebrow {
+  font-size: 11px;
+  line-height: 1.35;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.label_index {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.label_channel {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.label_value {
+  font-size: 14px;
+}
+
+.label_tick {
+  font-size: 10px;
+}
+
+.label_period {
+  font-size: 10.5px;
+  letter-spacing: 0.01em;
+}
+
+.label_legend {
+  font-size: 11.5px;
+}
+
+.label_domains {
+  font-size: 12.5px;
+  line-height: 1.6;
+  letter-spacing: 0.06em;
+}
+
+.label_notice {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-transform: uppercase;
+}
