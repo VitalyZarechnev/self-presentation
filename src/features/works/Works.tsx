@@ -19,6 +19,22 @@ const WIDGETS: Record<string, ComponentType> = {
       </Label>
     ),
   }),
+  interview: dynamic(() => import('@features/interview-prep/InterviewPrep'), {
+    ssr: false,
+    loading: () => (
+      <Label as='div' className={classes.works__placeholder}>
+        Загрузка…
+      </Label>
+    ),
+  }),
+  marshmallow: dynamic(() => import('@features/marshmallow-game/MarshmallowGame'), {
+    ssr: false,
+    loading: () => (
+      <Label as='div' className={classes.works__placeholder}>
+        Загрузка…
+      </Label>
+    ),
+  }),
   market: dynamic(() => import('@features/market/LiveMarket'), {
     ssr: false,
     loading: () => (
@@ -38,9 +54,16 @@ const WIDGETS: Record<string, ComponentType> = {
 };
 
 const STAGE_MIN_HEIGHT: Record<string, number> = {
-  'geo-trips': 440,
-  market: 321,
-  bank: 620,
+  'geo-trips': 720,
+  bank: 1000,
+  market: 500,
+  interview: 620,
+  marshmallow: 560,
+};
+
+const STAGE_SCALE: Record<string, number> = {
+  market: 1.55,
+  bank: 1.6,
 };
 
 export default function Works() {
@@ -49,7 +72,7 @@ export default function Works() {
       {worksList.map((work) => {
         const widget = WIDGETS[work.id];
         if (!widget) return null;
-        return <WorkItem key={work.id} work={work} widget={widget} minHeight={STAGE_MIN_HEIGHT[work.id]} />;
+        return <WorkItem key={work.id} work={work} widget={widget} minHeight={STAGE_MIN_HEIGHT[work.id]} scale={STAGE_SCALE[work.id]} />;
       })}
     </div>
   );
