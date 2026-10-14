@@ -11,6 +11,7 @@ Topic-scoped documents for both humans and AI agents.
 | [code-style.md](./code-style.md)       | Any `*.{ts,tsx}` — naming, imports, props order, functions, domain models.         |
 | [styling.md](./styling.md)             | Editing any `.scss` file — module conventions, `@assets/*` aliases, CSS variables. |
 | [icons.md](./icons.md)                 | Adding or modifying SVGs in `/src/ui/icons`.                                       |
+| [errors.md](./errors.md)               | Throwing/handling errors, or touching `/src/errors` and network clients.           |
 | [testing.md](./testing.md)             | Writing/changing `*.test.{ts,tsx}` files.                                          |
 
 ## Conventions for files in this folder

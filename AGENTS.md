@@ -26,6 +26,7 @@ Full rules and data-flow diagram: [docs/agents/architecture.md](./docs/agents/ar
 | `/src/ui/**`                                   | [ui.md](./docs/agents/ui.md), [styling.md](./docs/agents/styling.md), [icons.md](./docs/agents/icons.md) |
 | `/src/features/**`                             | [architecture.md](./docs/agents/architecture.md), [data-fetching.md](./docs/agents/data-fetching.md)     |
 | `/src/views/**` or `/app/**/page.tsx`          | [architecture.md](./docs/agents/architecture.md)                                                         |
+| `/src/errors/**`, or throwing/handling errors  | [errors.md](./docs/agents/errors.md)                                                                     |
 | Any `*.scss`                                   | [styling.md](./docs/agents/styling.md)                                                                   |
 | Any `*.svg` in `/src/ui/icons`                 | [icons.md](./docs/agents/icons.md)                                                                       |
 | Any `*.test.{ts,tsx}`                          | [testing.md](./docs/agents/testing.md)                                                                   |

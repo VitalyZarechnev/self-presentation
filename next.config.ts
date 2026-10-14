@@ -13,12 +13,8 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
   sassOptions: {
-    // Allow `@use '<dir>/...'` to resolve against `src/` (legacy includePaths).
     includePaths: [path.join(process.cwd(), 'src')],
   },
-  // Map `@assets/*` (used by SCSS modules in src/ui/**) to `src/assets/*`.
-  // sass-loader falls back to webpack's resolver for unresolved imports,
-  // so a webpack alias is the most reliable way to support this prefix.
   webpack(config: WebpackConfiguration) {
     config.resolve = config.resolve ?? {};
     config.resolve.alias = {
@@ -29,7 +25,7 @@ const nextConfig: NextConfig = {
     return config;
   },
   turbopack: {
-    root: __dirname,
+    root: process.cwd(),
     resolveAlias: {
       '@assets': './src/assets',
     },
