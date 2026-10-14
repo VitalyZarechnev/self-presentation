@@ -1,6 +1,7 @@
 import { IWebSocketClient } from '@data/network/websocket/IWebSocketClient';
 
 import { IMarketDatasource, TMarketStatus, TMarketSubscriber } from '@domain/market/datasources/IMarketDatasource';
+import { marketConfig } from '@domain/market/marketConfig';
 import { TTrade } from '@domain/market/models/Trade';
 import { TradeMessageSchema } from '@domain/market/models/TradeMessage';
 
@@ -23,6 +24,17 @@ export class MarketDatasourceImpl implements IMarketDatasource {
 
   subscribe(subscriber: TMarketSubscriber): () => void {
     this._simPrice = SIM_SEED_PRICE + Math.random() * SIM_SEED_RANGE;
+
+    if (!marketConfig.liveEnabled) {
+      this._status = 'demo';
+      subscriber.onStatus('demo');
+      this.startSimulator(subscriber);
+
+      return () => {
+        this.stopSimulator();
+      };
+    }
+
     this._status = 'connecting';
     subscriber.onStatus('connecting');
 
