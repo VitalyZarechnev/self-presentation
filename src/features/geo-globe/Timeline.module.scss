@@ -1,0 +1,117 @@
+@use '@assets/styles/breakpoints' as *;
+
+.timeline {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 14px;
+  align-items: center;
+  padding: 14px 18px;
+  background: var(--surface-raised);
+  border-bottom: 1px solid var(--line);
+
+  @media (max-width: $breakpoint-mobile) {
+    gap: 10px;
+    padding: 10px 12px;
+  }
+}
+
+.timeline__play {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1;
+  background: var(--panel-surface);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+
+  &:hover {
+    border-color: var(--danger);
+  }
+}
+
+.timeline__play_on {
+  color: #fff;
+  background: var(--danger);
+  border-color: var(--danger);
+}
+
+.timeline__body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.timeline__meta {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.timeline__trip {
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.timeline__date {
+  flex: 0 0 auto;
+  color: var(--ink-muted);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+}
+
+.timeline__track {
+  position: relative;
+  height: 22px;
+  cursor: pointer;
+  touch-action: none;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 0;
+    left: 0;
+    height: 4px;
+    background: var(--line);
+    border-radius: 2px;
+    transform: translateY(-50%);
+  }
+}
+
+.timeline__fill {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: 4px;
+  background: var(--danger);
+  border-radius: 2px;
+  transform: translateY(-50%);
+}
+
+.timeline__knob {
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  background: var(--danger);
+  border: 2px solid var(--panel-surface);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 0 1px var(--line);
+}

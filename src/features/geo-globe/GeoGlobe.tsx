@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 
 import { useTheme } from '@application/theme/ThemeProvider';
@@ -12,10 +12,13 @@ import Label from '@ui/atoms/typography/Label';
 import { useIsVisible } from '@utils/hooks/useIsVisible';
 
 import classes from './GeoGlobe.module.scss';
-import { GeoGlobeController } from './GeoGlobeController';
+import { GeoGlobeController, TTimelineInfo } from './GeoGlobeController';
+import Timeline from './Timeline';
 import TripCard from './TripCard';
 
 const HOME_CITY = tripCities.find((city) => city.home) ?? tripCities[0];
+
+const INITIAL_TIMELINE: TTimelineInfo = { t: 0, playing: true, follow: true, tripIndex: null, tripTitle: null, currentTime: null };
 
 function pinColor(): string {
   return getComputedStyle(document.documentElement).getPropertyValue('--danger').trim() || '#d64545';
@@ -28,6 +31,15 @@ export default function GeoGlobe() {
   const controllerRef = useRef<GeoGlobeController | null>(null);
   const visible = useIsVisible(mountRef);
   const [selected, setSelected] = useState<number | null>(null);
+  const [timeline, setTimeline] = useState<TTimelineInfo>(INITIAL_TIMELINE);
+  const [followHint, setFollowHint] = useState(false);
+  const followHintTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const showFollowHint = useCallback(() => {
+    setFollowHint(true);
+    if (followHintTimer.current) clearTimeout(followHintTimer.current);
+    followHintTimer.current = setTimeout(() => setFollowHint(false), 2800);
+  }, []);
 
   useEffect(() => {
     const mount = mountRef.current;
@@ -39,15 +51,19 @@ export default function GeoGlobe() {
       reduceMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
       pinColor: pinColor(),
       grabbingClass: classes.globe_grabbing,
+      cameraFollow: INITIAL_TIMELINE.follow,
       onSelect: setSelected,
+      onTimeline: setTimeline,
+      onFollowBlocked: showFollowHint,
     });
     controllerRef.current = controller;
 
     return () => {
       controller.dispose();
       controllerRef.current = null;
+      if (followHintTimer.current) clearTimeout(followHintTimer.current);
     };
-  }, []);
+  }, [showFollowHint]);
 
   useEffect(() => {
     if (visible) controllerRef.current?.start();
@@ -64,25 +80,42 @@ export default function GeoGlobe() {
 
   return (
     <div className={classes.globe}>
-      <div className={classes.globe__stage} ref={mountRef} role='img' aria-label='Интерактивный глобус с городами из поездок' />
-      <div className={classes.globe__labels} aria-hidden>
-        {tripCities.map((city, index) => (
-          <Label
-            key={city.name}
-            ref={(el) => {
-              labelRefs.current[index] = el;
-            }}
-            className={clsx(classes.globe__label, city.important && classes.globe__label_important)}
-          >
-            {city.name}
+      <Timeline
+        playing={timeline.playing}
+        progress={timeline.t}
+        follow={timeline.follow}
+        tripTitle={timeline.tripTitle}
+        currentTime={timeline.currentTime}
+        onTogglePlay={() => controllerRef.current?.setTimelinePlaying(!timeline.playing)}
+        onToggleFollow={() => controllerRef.current?.setCameraFollow(!timeline.follow)}
+        onScrub={(t) => controllerRef.current?.setTimelineProgress(t)}
+      />
+      <div className={classes.globe__viewport}>
+        <div className={classes.globe__stage} ref={mountRef} role='img' aria-label='Интерактивный глобус с городами из поездок' />
+        <div className={classes.globe__labels} aria-hidden>
+          {tripCities.map((city, index) => (
+            <Label
+              key={city.name}
+              ref={(el) => {
+                labelRefs.current[index] = el;
+              }}
+              className={clsx(classes.globe__label, city.important && classes.globe__label_important)}
+            >
+              {city.name}
+            </Label>
+          ))}
+        </div>
+        {selected === null ? (
+          <Label className={classes.globe__hint}>тяни — вращать · Ctrl+колесо / пинч — зум · клик — город</Label>
+        ) : (
+          <TripCard city={tripCities[selected]} home={HOME_CITY} onClose={() => setSelected(null)} />
+        )}
+        {followHint && timeline.follow && (
+          <Label as='div' className={classes.globe__follow_hint} role='status'>
+            Камера закреплена за транспортом. Открепите её кнопкой ⌖, чтобы вращать глобус.
           </Label>
-        ))}
+        )}
       </div>
-      {selected === null ? (
-        <Label className={classes.globe__hint}>тяни — вращать · Ctrl+колесо / пинч — зум · клик — город</Label>
-      ) : (
-        <TripCard city={tripCities[selected]} home={HOME_CITY} onClose={() => setSelected(null)} />
-      )}
     </div>
   );
 }

@@ -1,9 +1,12 @@
 import * as THREE from 'three';
 
+import { buildTimeline, sampleTimeline, TTimelineModel } from '@domain/geo/timeline';
 import { tripCities } from '@domain/geo/tripCities';
+import { resolveTrips } from '@domain/geo/trips';
 
 import { clampZoom, pointerPosition, touchDistance, toVec } from './globeMath';
 import { LabelSize, LabelSlot, layoutLabels, PinProjection, PlacedBox } from './labelLayout';
+import { TripLayer } from './TripLayer';
 
 const RADIUS = 1.55;
 const MIN_ZOOM = 2.3;
@@ -13,7 +16,18 @@ const PIN_REF_ZOOM = 4.4;
 const PIN_HIT_RADIUS = 22;
 const TAP_SLOP = 6;
 
+const FULL_LOOP_MS = 96000;
+
 const ASSET_PREFIX = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+
+export type TTimelineInfo = {
+  t: number;
+  playing: boolean;
+  follow: boolean;
+  tripIndex: number | null;
+  tripTitle: string | null;
+  currentTime: number | null;
+};
 
 export type GeoGlobeOptions = {
   mount: HTMLElement;
@@ -21,15 +35,33 @@ export type GeoGlobeOptions = {
   reduceMotion: boolean;
   pinColor: string;
   grabbingClass: string;
+  cameraFollow: boolean;
   onSelect: (index: number | null) => void;
+  onTimeline: (info: TTimelineInfo) => void;
+  onFollowBlocked: () => void;
 };
 
 export class GeoGlobeController {
   private readonly mount: HTMLElement;
   private readonly labels: readonly (HTMLElement | null)[];
-  private readonly reduceMotion: boolean;
   private readonly grabbingClass: string;
   private readonly onSelect: (index: number | null) => void;
+  private readonly onTimeline: (info: TTimelineInfo) => void;
+  private readonly onFollowBlocked: () => void;
+
+  private readonly timeline: TTimelineModel;
+  private readonly tripLayer: TripLayer;
+  private timelineT = 0;
+  private timelinePlaying: boolean;
+  private lastFrameMs = 0;
+  private lastEmitKey = '';
+
+  private cameraFollow: boolean;
+  private readonly followTarget = new THREE.Quaternion();
+  private readonly followUp = new THREE.Vector3(0, 1, 0);
+  private readonly followE1 = new THREE.Vector3();
+  private readonly followE2 = new THREE.Vector3();
+  private readonly followBasis = new THREE.Matrix4();
 
   private readonly renderer: THREE.WebGLRenderer;
   private readonly scene: THREE.Scene;
@@ -63,6 +95,16 @@ export class GeoGlobeController {
   private downX = 0;
   private downY = 0;
   private moved = false;
+  private followHintShown = false;
+
+  private yaw = 2.6;
+  private pitch = 0.26;
+  private readonly qYaw = new THREE.Quaternion();
+  private readonly qPitch = new THREE.Quaternion();
+  private readonly axisX = new THREE.Vector3(1, 0, 0);
+  private readonly axisY = new THREE.Vector3(0, 1, 0);
+  private readonly tmpFacing = new THREE.Vector3();
+  private readonly tmpQuat = new THREE.Quaternion();
 
   private running = false;
   private raf = 0;
@@ -75,9 +117,12 @@ export class GeoGlobeController {
   constructor(options: GeoGlobeOptions) {
     this.mount = options.mount;
     this.labels = options.labels;
-    this.reduceMotion = options.reduceMotion;
     this.grabbingClass = options.grabbingClass;
     this.onSelect = options.onSelect;
+    this.onTimeline = options.onTimeline;
+    this.onFollowBlocked = options.onFollowBlocked;
+    this.timelinePlaying = !options.reduceMotion;
+    this.cameraFollow = options.cameraFollow;
 
     this.width = this.mount.clientWidth;
     this.height = this.mount.clientHeight;
@@ -123,6 +168,10 @@ export class GeoGlobeController {
     this.globe.rotation.y = 2.6;
     this.globe.rotation.x = 0.26;
 
+    const resolvedTrips = resolveTrips();
+    this.timeline = buildTimeline(resolvedTrips);
+    this.tripLayer = new TripLayer(this.globe, RADIUS, resolvedTrips, options.pinColor, ASSET_PREFIX);
+
     this.projections = tripCities.map((_, index) => ({ index, front: 0, sx: 0, sy: 0, important: false }));
     this.placed = tripCities.map(() => ({ cx: 0, cy: 0, w: 0, h: 0 }));
     this.slots = tripCities.map(() => ({ visible: false, left: 0, top: 0 }));
@@ -151,7 +200,41 @@ export class GeoGlobeController {
 
   setPinColor(color: string): void {
     this.pinMat.color.set(color);
+    this.tripLayer.setColor(color);
     this.needsRender = true;
+  }
+
+  setTimelinePlaying(playing: boolean): void {
+    this.timelinePlaying = playing;
+    this.lastFrameMs = 0;
+    this.needsRender = true;
+  }
+
+  setTimelineProgress(t: number): void {
+    this.timelineT = clampZoom(t, 0, 1);
+    this.needsRender = true;
+  }
+
+  setCameraFollow(follow: boolean): void {
+    if (!follow && this.cameraFollow) {
+      this.syncManualFromQuaternion();
+      this.applyManualRotation();
+    }
+    this.cameraFollow = follow;
+    this.needsRender = true;
+  }
+
+  private applyManualRotation(): void {
+    this.qYaw.setFromAxisAngle(this.axisY, this.yaw);
+    this.qPitch.setFromAxisAngle(this.axisX, this.pitch);
+    this.globe.quaternion.multiplyQuaternions(this.qPitch, this.qYaw);
+  }
+
+  private syncManualFromQuaternion(): void {
+    this.tmpQuat.copy(this.globe.quaternion).invert();
+    this.tmpFacing.set(0, 0, 1).applyQuaternion(this.tmpQuat);
+    this.pitch = Math.max(-1.2, Math.min(1.2, Math.asin(Math.max(-1, Math.min(1, this.tmpFacing.y)))));
+    this.yaw = Math.atan2(-this.tmpFacing.x, this.tmpFacing.z);
   }
 
   dispose(): void {
@@ -175,6 +258,53 @@ export class GeoGlobeController {
     this.hiResTexture?.dispose();
     this.pinGeo.dispose();
     this.pinMat.dispose();
+    this.tripLayer.dispose();
+  }
+
+  private advanceTimeline(): void {
+    const now = performance.now();
+    if (this.timelinePlaying) {
+      if (this.lastFrameMs !== 0) {
+        this.timelineT += (now - this.lastFrameMs) / FULL_LOOP_MS;
+        if (this.timelineT >= 1) this.timelineT -= Math.floor(this.timelineT);
+      }
+      this.needsRender = true;
+    }
+    this.lastFrameMs = now;
+  }
+
+  private followPlane(): void {
+    const dir = this.tripLayer.getVehicleDirection();
+    if (!dir) return;
+
+    this.followE2.copy(this.followUp).addScaledVector(dir, -this.followUp.dot(dir));
+    if (this.followE2.lengthSq() < 1e-6) this.followE2.set(1, 0, 0);
+    this.followE2.normalize();
+    this.followE1.crossVectors(this.followE2, dir).normalize();
+    this.followBasis.makeBasis(this.followE1, this.followE2, dir);
+    this.followBasis.transpose();
+    this.followTarget.setFromRotationMatrix(this.followBasis);
+
+    if (this.globe.quaternion.angleTo(this.followTarget) > 1e-3) {
+      this.globe.quaternion.slerp(this.followTarget, 0.12);
+      this.needsRender = true;
+    }
+  }
+
+  private emitTimeline(sample: ReturnType<typeof sampleTimeline>): void {
+    const key = `${sample?.tripIndex ?? -1}:${Math.round(this.timelineT * 200)}:${this.timelinePlaying}:${this.cameraFollow}`;
+    if (key === this.lastEmitKey) return;
+    this.lastEmitKey = key;
+
+    const tripIndex = sample?.tripIndex ?? null;
+    this.onTimeline({
+      t: this.timelineT,
+      playing: this.timelinePlaying,
+      follow: this.cameraFollow,
+      tripIndex,
+      tripTitle: tripIndex === null ? null : (this.timeline.trips[tripIndex]?.title ?? null),
+      currentTime: sample?.currentTime ?? null,
+    });
   }
 
   private attachEvents(): void {
@@ -244,6 +374,7 @@ export class GeoGlobeController {
     }
     this.dragging = true;
     this.moved = false;
+    this.followHintShown = false;
     this.mount.classList.add(this.grabbingClass);
     [this.prevX, this.prevY] = pointerPosition(event);
     [this.downX, this.downY] = [this.prevX, this.prevY];
@@ -261,13 +392,23 @@ export class GeoGlobeController {
     if (!this.dragging) return;
     const [x, y] = pointerPosition(event);
     if (!this.moved && Math.hypot(x - this.downX, y - this.downY) > TAP_SLOP) this.moved = true;
-    this.velY = (x - this.prevX) * 0.006;
-    this.velX = (y - this.prevY) * 0.006;
-    this.globe.rotation.y += this.velY;
-    this.globe.rotation.x = Math.max(-1.2, Math.min(1.2, this.globe.rotation.x + this.velX));
+    if (this.moved) {
+      if (this.cameraFollow) {
+        if (!this.followHintShown) {
+          this.followHintShown = true;
+          this.onFollowBlocked();
+        }
+      } else {
+        this.velY = (x - this.prevX) * 0.006;
+        this.velX = (y - this.prevY) * 0.006;
+        this.yaw += this.velY;
+        this.pitch = Math.max(-1.2, Math.min(1.2, this.pitch + this.velX));
+        this.applyManualRotation();
+        this.needsRender = true;
+      }
+    }
     this.prevX = x;
     this.prevY = y;
-    this.needsRender = true;
   };
 
   private readonly onUp = (event: MouseEvent | TouchEvent): void => {
@@ -276,6 +417,8 @@ export class GeoGlobeController {
     this.pinching = false;
     this.mount.classList.remove(this.grabbingClass);
     if (!wasTap) return;
+    this.velX = 0;
+    this.velY = 0;
     const point = 'changedTouches' in event ? event.changedTouches[0] : event;
     if (!point) return;
     const picked = this.pickCity(point.clientX, point.clientY);
@@ -300,27 +443,34 @@ export class GeoGlobeController {
   };
 
   private readonly render = (): void => {
-    const autoRotating = !this.dragging && !this.hovering && this.selected === null;
-    if (autoRotating) {
-      if (!this.reduceMotion) {
-        this.globe.rotation.y += 0.0022;
-      } else {
-        this.velY *= 0.94;
-        this.velX *= 0.94;
-        this.globe.rotation.y += this.velY;
-        this.globe.rotation.x += this.velX;
-      }
+    this.advanceTimeline();
+
+    if (!this.cameraFollow && !this.dragging && (Math.abs(this.velX) > 1e-4 || Math.abs(this.velY) > 1e-4)) {
+      this.velY *= 0.9;
+      this.velX *= 0.9;
+      this.yaw += this.velY;
+      this.pitch = Math.max(-1.2, Math.min(1.2, this.pitch + this.velX));
+      this.applyManualRotation();
       this.needsRender = true;
+    } else if (!this.dragging) {
+      this.velX = 0;
+      this.velY = 0;
     }
 
+    const pinScale = this.camera.position.z / PIN_REF_ZOOM;
+    const sample = sampleTimeline(this.timeline, this.timelineT);
+    this.tripLayer.setZoomScale(pinScale);
+    this.tripLayer.update(sample);
+
+    if (this.cameraFollow) this.followPlane();
+
     if (this.needsRender) {
-      const pinScale = this.camera.position.z / PIN_REF_ZOOM;
       for (let m = 0; m < this.markers.length; m += 1) this.markers[m].scale.setScalar(pinScale);
 
       this.renderer.render(this.scene, this.camera);
 
       for (let k = 0; k < this.pinPositions.length; k += 1) {
-        this.projected.copy(this.pinPositions[k]).applyEuler(this.globe.rotation);
+        this.projected.copy(this.pinPositions[k]).applyQuaternion(this.globe.quaternion);
         const pin = this.projections[k];
         pin.index = k;
         pin.important = tripCities[k].important === true;
@@ -345,11 +495,11 @@ export class GeoGlobeController {
           label.style.opacity = '0';
           continue;
         }
-        label.style.left = `${slot.left}px`;
-        label.style.top = `${slot.top}px`;
+        label.style.transform = `translate3d(${slot.left}px, ${slot.top}px, 0) translate(-50%, -150%)`;
         label.style.opacity = '1';
       }
 
+      this.emitTimeline(sample);
       this.needsRender = false;
     }
 
