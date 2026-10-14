@@ -81,6 +81,7 @@
 .market__tape {
   height: calc(var(--tape-rows, 9) * 20px);
   overflow: hidden;
+  overflow-anchor: none;
 }
 
 .market__trade {
