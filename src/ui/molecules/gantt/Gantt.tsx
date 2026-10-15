@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import Label from '@ui/atoms/typography/Label';
 import Text from '@ui/atoms/typography/Text';
 import ChevronDownIcon from '@ui/icons/chevron-down.svg';
+import ProjectList, { TProjectView } from '@ui/molecules/project-list/ProjectList';
 
 import classes from './Gantt.module.scss';
 import { pct } from './utils';
@@ -34,6 +35,7 @@ export type TGanttRow = {
   caption?: string;
   segments?: readonly TGanttSegment[];
   details?: readonly string[];
+  projects?: readonly TProjectView[];
 };
 
 export type TGanttLegendItem = {
@@ -83,7 +85,7 @@ export default function Gantt({ rows, ticks, gridStep, legend }: TProps) {
             </Label>
           )}
         </span>
-        {row.details && row.details.length > 0 && (
+        {((row.details && row.details.length > 0) || (row.projects && row.projects.length > 0)) && (
           <ChevronDownIcon className={clsx(classes.gantt__chevron, open && classes.gantt__chevron_open)} />
         )}
       </div>
@@ -127,11 +129,13 @@ export default function Gantt({ rows, ticks, gridStep, legend }: TProps) {
 
           {rows.map((row) => {
             const hasDetails = !!row.details && row.details.length > 0;
+            const hasProjects = !!row.projects && row.projects.length > 0;
+            const expandable = hasDetails || hasProjects;
             const open = expanded.has(row.id);
 
             return (
               <div key={row.id} className={classes.gantt__group}>
-                {hasDetails ? (
+                {expandable ? (
                   <button
                     type='button'
                     className={clsx(classes.gantt__row, classes.gantt__row_button)}
@@ -145,7 +149,7 @@ export default function Gantt({ rows, ticks, gridStep, legend }: TProps) {
                   <div className={classes.gantt__row}>{renderLine(row, open)}</div>
                 )}
 
-                {hasDetails && open && (
+                {open && hasDetails && (
                   <ul className={classes.gantt__details}>
                     {row.details?.map((detail, index) => (
                       <Text key={index} as='li' variant='detail' className={classes.gantt__detail}>
@@ -153,6 +157,12 @@ export default function Gantt({ rows, ticks, gridStep, legend }: TProps) {
                       </Text>
                     ))}
                   </ul>
+                )}
+
+                {open && hasProjects && (
+                  <div className={classes.gantt__projects}>
+                    <ProjectList projects={row.projects ?? []} />
+                  </div>
                 )}
               </div>
             );

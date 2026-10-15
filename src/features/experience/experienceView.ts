@@ -1,9 +1,20 @@
-import { TExperience, TExperiencePoint } from '@domain/experience/models/Experience';
+import { TExperience, TExperiencePoint, TExperienceProject } from '@domain/experience/models/Experience';
 
 import { TGanttLegendItem, TGanttRow, TGanttSegment, TGanttTick } from '@ui/molecules/gantt/Gantt';
+import { TProjectView } from '@ui/molecules/project-list/ProjectList';
 import { TTimelineItem } from '@ui/molecules/timeline/Timeline';
 
 const MONTHS_SHORT = ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
+
+function buildProjects(id: string, projects: readonly TExperienceProject[] | undefined): TProjectView[] {
+  return (projects ?? []).map((project, index) => ({
+    id: `${id}-p${index}`,
+    name: project.name,
+    meta: [project.period, project.role].filter(Boolean).join(' · ') || undefined,
+    description: project.description,
+    stack: project.stack,
+  }));
+}
 
 const toMonths = (point: TExperiencePoint): number => point.year * 12 + (point.month - 1) + ((point.day ?? 1) - 1) / 31;
 
@@ -64,6 +75,7 @@ export function buildGantt(items: readonly TExperience[], now: TExperiencePoint)
         caption: `${formatPoint(item.start)} — ${item.end ? formatPoint(item.end) : 'сейчас'}`,
         segments,
         details: item.achievements,
+        projects: buildProjects(item.id, item.projects),
       };
     });
 
@@ -92,5 +104,6 @@ export function buildTimeline(items: readonly TExperience[]): TTimelineItem[] {
       date: `${item.start.year} — ${item.end ? item.end.year : 'сейчас'}`,
       tags: item.stack,
       details: item.achievements,
+      projects: buildProjects(item.id, item.projects),
     }));
 }

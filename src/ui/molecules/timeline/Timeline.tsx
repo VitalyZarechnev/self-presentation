@@ -7,6 +7,7 @@ import Tag from '@ui/atoms/tag/Tag';
 import Label from '@ui/atoms/typography/Label';
 import Text from '@ui/atoms/typography/Text';
 import ChevronDownIcon from '@ui/icons/chevron-down.svg';
+import ProjectList, { TProjectView } from '@ui/molecules/project-list/ProjectList';
 
 import classes from './Timeline.module.scss';
 
@@ -17,6 +18,7 @@ export type TTimelineItem = {
   subtitle?: string;
   tags?: readonly string[];
   details?: readonly string[];
+  projects?: readonly TProjectView[];
 };
 
 type TProps = {
@@ -72,6 +74,8 @@ export default function Timeline({ items, gutter }: TProps) {
 
           {items.map((item) => {
             const hasDetails = !!item.details && item.details.length > 0;
+            const hasProjects = !!item.projects && item.projects.length > 0;
+            const expandable = hasDetails || hasProjects;
             const open = expanded.has(item.id);
 
             return (
@@ -79,7 +83,7 @@ export default function Timeline({ items, gutter }: TProps) {
                 <Label className={classes.timeline__date}>{item.date}</Label>
                 <span className={classes.timeline__node} aria-hidden />
 
-                {hasDetails ? (
+                {expandable ? (
                   <button
                     type='button'
                     className={clsx(classes.timeline__card, classes.timeline__card_button)}
@@ -92,7 +96,7 @@ export default function Timeline({ items, gutter }: TProps) {
                   <div className={classes.timeline__card}>{renderBody(item, open, false)}</div>
                 )}
 
-                {hasDetails && open && (
+                {open && hasDetails && (
                   <ul className={classes.timeline__details}>
                     {item.details?.map((detail, index) => (
                       <Text key={index} as='li' variant='detail' className={classes.timeline__detail}>
@@ -100,6 +104,12 @@ export default function Timeline({ items, gutter }: TProps) {
                       </Text>
                     ))}
                   </ul>
+                )}
+
+                {open && hasProjects && (
+                  <div className={classes.timeline__projects}>
+                    <ProjectList projects={item.projects ?? []} />
+                  </div>
                 )}
               </li>
             );
