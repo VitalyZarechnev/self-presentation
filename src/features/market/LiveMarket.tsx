@@ -90,8 +90,8 @@ export default function LiveMarket() {
         Последние сделки
       </Label>
       <div className={classes.market__tape} style={{ '--tape-rows': TAPE } as CSSProperties}>
-        {snapshot.tape.map(({ id, trade }) => (
-          <div key={id} className={classes.market__trade}>
+        {snapshot.tape.map(({ trade }, slot) => (
+          <div key={slot} className={classes.market__trade}>
             <Label>{formatTime(trade.time)}</Label>
             <Label className={trade.buy ? classes.market__pos : classes.market__neg}>{trade.price.toFixed(1)}</Label>
             <Label>{trade.qty.toFixed(3)}</Label>
