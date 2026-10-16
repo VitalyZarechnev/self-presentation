@@ -251,7 +251,7 @@ export default function TicTacToe() {
         </div>
 
         <Label variant='eyebrow' className={classes.tic_tac_toe__hint}>
-          Нажмите, чтобы сыграть
+          Сыграйте против ИИ
         </Label>
       </div>
     );
@@ -271,7 +271,7 @@ export default function TicTacToe() {
       </div>
 
       <Label variant='eyebrow' aria-hidden className={classes.tic_tac_toe__hint_hidden}>
-        Нажмите, чтобы сыграть
+        Сыграйте против ИИ
       </Label>
 
       <span role='status' aria-live='polite' className={classes.tic_tac_toe__status}>

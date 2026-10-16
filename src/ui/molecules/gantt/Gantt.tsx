@@ -11,7 +11,7 @@ import ProjectList, { TProjectView } from '@ui/molecules/project-list/ProjectLis
 import classes from './Gantt.module.scss';
 import { pct } from './utils';
 
-export type TGanttTone = 'accent' | 'danger';
+export type TGanttTone = 'accent' | 'danger' | 'muted';
 
 export type TGanttTick = {
   label: string;

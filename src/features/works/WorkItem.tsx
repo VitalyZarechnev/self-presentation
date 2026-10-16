@@ -32,7 +32,7 @@ export default function WorkItem({ work, widget: Widget, minHeight, scale }: TPr
     : undefined;
 
   return (
-    <article className={classes.work}>
+    <article id={work.id} className={classes.work}>
       <header className={classes.work__head}>
         <div className={classes.work__title}>
           <Heading variant='h3'>{work.name}</Heading>
