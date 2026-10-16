@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 export const educationSchema = z.object({
   id: z.string(),
+  kind: z.enum(['degree', 'course']),
   year: z.number().int(),
   qualification: z.string(),
   institution: z.string(),

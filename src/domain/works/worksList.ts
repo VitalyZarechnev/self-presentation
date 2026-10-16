@@ -22,7 +22,7 @@ export const worksList: readonly TWork[] = [
   },
   {
     id: 'market',
-    name: 'Реалтайм Binance',
+    name: 'Лента сделок в реальном времени',
     tech: ['WebSocket', 'React', 'Canvas'],
   },
   {

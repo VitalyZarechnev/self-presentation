@@ -7,6 +7,7 @@ import { TicTacToe as Game, TDifficulty, TMark } from '@domain/game/ticTacToe';
 import Label from '@ui/atoms/typography/Label';
 
 import { useIsomorphicLayoutEffect } from '@utils/hooks/useIsomorphicLayoutEffect';
+import { usePrefersReducedMotion } from '@utils/hooks/usePrefersReducedMotion';
 
 import Board from './Board';
 import classes from './TicTacToe.module.scss';
@@ -38,6 +39,7 @@ function freshSlot(): TSlot {
 }
 
 export default function TicTacToe() {
+  const reducedMotion = usePrefersReducedMotion();
   const [mode, setMode] = useState<'demo' | 'user'>('demo');
   const [capacity, setCapacity] = useState(MAX_BOARDS);
 
@@ -99,7 +101,7 @@ export default function TicTacToe() {
   }, [capacity]);
 
   useEffect(() => {
-    if (mode !== 'demo') return undefined;
+    if (mode !== 'demo' || reducedMotion) return undefined;
 
     let stopped = false;
     let timer: ReturnType<typeof setTimeout>;
@@ -162,7 +164,7 @@ export default function TicTacToe() {
       stopped = true;
       clearTimeout(timer);
     };
-  }, [mode]);
+  }, [mode, reducedMotion]);
 
   useEffect(() => {
     if (mode !== 'user' || userGame.isOver || userGame.currentPlayer !== AI) return undefined;
@@ -177,7 +179,8 @@ export default function TicTacToe() {
   }, [mode, userGame, userDifficulty]);
 
   useEffect(() => {
-    if (mode !== 'user') return undefined;
+    const inProgress = !userGame.isOver && userGame.board.some((cell) => cell !== null);
+    if (mode !== 'user' || inProgress) return undefined;
 
     const timer = setTimeout(() => {
       demoRef.current = { slots: [freshSlot()], activeIndex: 0 };

@@ -40,6 +40,12 @@
     @include hover {
       color: var(--accent);
     }
+
+    @media (pointer: coarse) {
+      min-height: 44px;
+      margin-block: -16px;
+      padding-inline: 12px;
+    }
   }
 
   &__quote {
@@ -179,6 +185,22 @@
         display: none;
       }
     }
+  }
+
+  &__trade_empty::before {
+    content: '';
+    grid-column: 1 / -1;
+    height: 8px;
+    width: 72%;
+    background: var(--line);
+    opacity: 0.6;
+  }
+
+  & &__stalled {
+    grid-column: 1 / -1;
+    color: var(--ink-muted);
+    font-size: 11px;
+    text-align: left;
   }
 
   &__caption {
