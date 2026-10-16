@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import WorksView from '@views/works/WorksView';
 
 export const metadata: Metadata = {
-  title: 'Примеры работ',
+  title: 'Живые демо',
   description: 'Живые интерактивные виджеты на разных стеках.',
 };
 

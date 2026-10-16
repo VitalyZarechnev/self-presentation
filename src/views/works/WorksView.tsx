@@ -18,7 +18,7 @@ export default function WorksView() {
         </ActionButton>
 
         <header className={classes.works_view__head}>
-          <Heading variant='h1'>Примеры работ</Heading>
+          <Heading variant='h1'>Живые демо</Heading>
           <Content as='p' className={classes.works_view__sub}>
             Живые виджеты на разных стеках — можно потрогать прямо здесь.
           </Content>

@@ -10,9 +10,9 @@ import '@assets/styles/index.scss';
 
 const THEME_INIT_SRC = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/theme-init.js`;
 
-const TITLE = 'Виталий Заречнев — Frontend Lead';
+const TITLE = 'Виталий Заречнев — Senior Frontend Engineer';
 const DESCRIPTION =
-  'Веду фронтенд от архитектуры до продакшна и команду, которая это делает: финтех, блокчейн, IoT, бортовые системы, AI-интерфейсы.';
+  'Архитектура фронтенда, которая держит нагрузку и команду: Clean Architecture, живые демо, финтех, блокчейн, IoT, бортовые системы, AI-интерфейсы.';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL;
 const OG_IMAGE = { url: 'og.png', width: 1200, height: 630, alt: TITLE };
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   title: { default: TITLE, template: '%s — Виталий Заречнев' },
   description: DESCRIPTION,
   authors: [{ name: 'Виталий Заречнев' }],
-  keywords: ['фронтенд', 'Frontend Lead', 'React', 'TypeScript', 'финтех', 'блокчейн', 'IoT'],
+  keywords: ['фронтенд', 'Senior Frontend', 'Frontend Lead', 'React', 'TypeScript', 'финтех', 'блокчейн', 'IoT'],
   openGraph: {
     type: 'website',
     locale: 'ru_RU',

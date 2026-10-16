@@ -5,13 +5,18 @@ import classes from './Heading.module.scss';
 
 type TProps = PropsWithChildren & {
   variant: 'h1' | 'h2' | 'h3';
+  id?: string;
   className?: string;
 };
 
 export default function Heading(props: TProps) {
-  const { variant, className, children } = props;
+  const { variant, id, className, children } = props;
 
   const Tag = variant;
 
-  return <Tag className={clsx(classes.heading, classes[`heading__${variant}`], className)}>{children}</Tag>;
+  return (
+    <Tag id={id} className={clsx(classes.heading, classes[`heading__${variant}`], className)}>
+      {children}
+    </Tag>
+  );
 }

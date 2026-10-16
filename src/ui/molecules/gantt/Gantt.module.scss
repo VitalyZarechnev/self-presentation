@@ -162,6 +162,10 @@
     background: var(--danger);
   }
 
+  &__segment_muted {
+    background: repeating-linear-gradient(135deg, var(--ink-muted) 0 2px, transparent 2px 5px);
+  }
+
   &__legend {
     display: flex;
     flex-wrap: wrap;
@@ -190,6 +194,10 @@
 
   &__swatch_danger {
     background: var(--danger);
+  }
+
+  &__swatch_muted {
+    background: repeating-linear-gradient(135deg, var(--ink-muted) 0 2px, transparent 2px 4px);
   }
 
   &__details {

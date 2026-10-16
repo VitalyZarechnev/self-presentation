@@ -60,8 +60,8 @@ export function buildGantt(items: readonly TExperience[], now: TExperiencePoint)
         segments.push({
           start: frac(item.start),
           end: frac(item.officialFrom),
-          tone: 'danger',
-          caption: `Неофициально: ${formatPoint(item.start)} — официально с ${formatDate(item.officialFrom)}`,
+          tone: 'muted',
+          caption: `До оформления: ${formatPoint(item.start)} — в штате с ${formatDate(item.officialFrom)}`,
         });
       }
 
@@ -86,8 +86,8 @@ export function buildGantt(items: readonly TExperience[], now: TExperiencePoint)
 
   const legend: TGanttLegendItem[] = hasUnofficial
     ? [
-        { tone: 'accent', label: 'Официально' },
-        { tone: 'danger', label: 'Неофициально' },
+        { tone: 'accent', label: 'В штате' },
+        { tone: 'muted', label: 'До оформления' },
       ]
     : [];
 

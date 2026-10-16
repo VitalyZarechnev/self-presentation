@@ -23,7 +23,7 @@ export default function SiteHeader() {
       <div className={classes.inner}>
         <Link href='/' className={classes.brand}>
           <span className={classes.name}>Виталий Заречнев</span>
-          <span className={classes.role}>Frontend Lead</span>
+          <span className={classes.role}>Senior Frontend Engineer</span>
         </Link>
 
         <nav className={classes.nav} aria-label='Разделы'>
