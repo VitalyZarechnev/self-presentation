@@ -33,9 +33,16 @@ export type TGanttRow = {
   end: number;
   ongoing?: boolean;
   caption?: string;
+  note?: TGanttNote;
+  summary?: readonly string[];
   segments?: readonly TGanttSegment[];
   details?: readonly string[];
   projects?: readonly TProjectView[];
+};
+
+export type TGanttNote = {
+  tone: TGanttTone;
+  label: string;
 };
 
 export type TGanttLegendItem = {
@@ -83,6 +90,12 @@ export default function Gantt({ rows, ticks, gridStep, legend }: TProps) {
             <Label variant='period' className={classes.gantt__period}>
               {row.caption}
             </Label>
+          )}
+          {row.note && (
+            <span className={classes.gantt__note}>
+              <i className={clsx(classes.gantt__swatch, classes[`gantt__swatch_${row.note.tone}`])} aria-hidden />
+              <Label variant='period'>{row.note.label}</Label>
+            </span>
           )}
         </span>
         {((row.details && row.details.length > 0) || (row.projects && row.projects.length > 0)) && (
@@ -147,6 +160,16 @@ export default function Gantt({ rows, ticks, gridStep, legend }: TProps) {
                   </button>
                 ) : (
                   <div className={classes.gantt__row}>{renderLine(row, open)}</div>
+                )}
+
+                {!open && row.summary && row.summary.length > 0 && (
+                  <ul className={classes.gantt__summary}>
+                    {row.summary.map((item) => (
+                      <Text key={item} as='li' variant='detail' className={classes.gantt__summary_item}>
+                        {item}
+                      </Text>
+                    ))}
+                  </ul>
                 )}
 
                 {open && hasDetails && (

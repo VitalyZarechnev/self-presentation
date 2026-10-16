@@ -29,12 +29,14 @@ const SECTION_BODIES: Record<string, ReactNode> = {
   contacts: <Contacts />,
 };
 
+const BUILD_YEAR = new Date().getFullYear();
+
 export default function HomeView() {
   return (
     <main className={classes.home_view}>
       <SiteHeader />
 
-      <section className={classes.home_view__hero} aria-labelledby='hero-title'>
+      <section id='content' className={classes.home_view__hero} aria-labelledby='hero-title'>
         <Heading variant='h1' id='hero-title' className={classes.home_view__title}>
           Архитектура фронтенда, которая держит нагрузку и команду
         </Heading>
@@ -54,8 +56,7 @@ export default function HomeView() {
             </ActionButton>
           </div>
           <Content as='p' size='mini' className={classes.home_view__byline}>
-            <strong className={classes.home_view__name}>Виталий Заречнев</strong> — Senior Frontend Engineer, сейчас Head of Frontend в
-            red_mad_robot
+            <strong className={classes.home_view__name}>Виталий Заречнев</strong> — Senior Frontend Engineer, руковожу командой 4+ года
           </Content>
         </div>
 
@@ -83,6 +84,12 @@ export default function HomeView() {
           </section>
         ))}
       </div>
+      <footer className={classes.home_view__footer}>
+        <Label as='p' className={classes.home_view__footer_case}>
+          Сайт — тоже кейс: Next.js 16, React 19, Clean Architecture, две темы на CSS-токенах
+        </Label>
+        <Label as='p'>© {BUILD_YEAR} Виталий Заречнев</Label>
+      </footer>
     </main>
   );
 }

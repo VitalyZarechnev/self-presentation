@@ -1,6 +1,6 @@
 import { TExperience, TExperiencePoint, TExperienceProject } from '@domain/experience/models/Experience';
 
-import { TGanttLegendItem, TGanttRow, TGanttSegment, TGanttTick } from '@ui/molecules/gantt/Gantt';
+import { TGanttRow, TGanttSegment, TGanttTick } from '@ui/molecules/gantt/Gantt';
 import { TProjectView } from '@ui/molecules/project-list/ProjectList';
 import { TTimelineItem } from '@ui/molecules/timeline/Timeline';
 
@@ -33,7 +33,6 @@ type TGanttModel = {
   rows: TGanttRow[];
   ticks: TGanttTick[];
   gridStep: number;
-  legend: TGanttLegendItem[];
 };
 
 export function buildGantt(items: readonly TExperience[], now: TExperiencePoint): TGanttModel {
@@ -47,8 +46,6 @@ export function buildGantt(items: readonly TExperience[], now: TExperiencePoint)
 
   const frac = (point: TExperiencePoint): number => (toMonths(point) - rangeStart) / span;
 
-  let hasUnofficial = false;
-
   const rows: TGanttRow[] = [...items]
     .sort((a, b) => toMonths(a.start) - toMonths(b.start))
     .map((item) => {
@@ -56,7 +53,6 @@ export function buildGantt(items: readonly TExperience[], now: TExperiencePoint)
 
       const segments: TGanttSegment[] = [];
       if (item.officialFrom) {
-        hasUnofficial = true;
         segments.push({
           start: frac(item.start),
           end: frac(item.officialFrom),
@@ -73,7 +69,11 @@ export function buildGantt(items: readonly TExperience[], now: TExperiencePoint)
         end: frac(end),
         ongoing: item.end === null,
         caption: `${formatPoint(item.start)} — ${item.end ? formatPoint(item.end) : 'сейчас'}`,
+        note: item.officialFrom
+          ? { tone: 'muted' as const, label: `до оформления: ${formatPoint(item.start)} — ${formatPoint(item.officialFrom)}` }
+          : undefined,
         segments,
+        summary: item.keyResults,
         details: item.achievements,
         projects: buildProjects(item.id, item.projects),
       };
@@ -84,14 +84,7 @@ export function buildGantt(items: readonly TExperience[], now: TExperiencePoint)
     ticks.push({ label: `’${String(year).slice(2)}`, position: (year * 12 - rangeStart) / span });
   }
 
-  const legend: TGanttLegendItem[] = hasUnofficial
-    ? [
-        { tone: 'accent', label: 'В штате' },
-        { tone: 'muted', label: 'До оформления' },
-      ]
-    : [];
-
-  return { rows, ticks, gridStep: 1 / years, legend };
+  return { rows, ticks, gridStep: 1 / years };
 }
 
 export function buildTimeline(items: readonly TExperience[]): TTimelineItem[] {

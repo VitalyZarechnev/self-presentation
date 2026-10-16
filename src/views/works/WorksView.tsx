@@ -4,6 +4,7 @@ import Works from '@features/works/Works';
 import ActionButton from '@ui/atoms/action-button/ActionButton';
 import Content from '@ui/atoms/typography/Content';
 import Heading from '@ui/atoms/typography/Heading';
+import ArrowBackIcon from '@ui/icons/arrow-back.svg';
 
 import classes from './WorksView.module.scss';
 
@@ -12,15 +13,16 @@ export default function WorksView() {
     <main className={classes.works_view}>
       <SiteHeader />
 
-      <div className={classes.works_view__content}>
+      <div id='content' className={classes.works_view__content}>
         <ActionButton href='/#works' variant='secondary' className={classes.works_view__back}>
-          ← На главную
+          <ArrowBackIcon className={classes.works_view__back_icon} aria-hidden />
+          На главную
         </ActionButton>
 
         <header className={classes.works_view__head}>
           <Heading variant='h1'>Живые демо</Heading>
           <Content as='p' className={classes.works_view__sub}>
-            Живые виджеты на разных стеках — можно потрогать прямо здесь.
+            Работают прямо в браузере: их можно покрутить и понажать.
           </Content>
         </header>
 

@@ -14,12 +14,14 @@ import { usePrefersReducedMotion } from '@utils/hooks/usePrefersReducedMotion';
 
 import { formatChange, formatPrice, formatTime, MARKET_STATUS_LABEL } from './format';
 import classes from './MarketTicker.module.scss';
+import useFeedStall from './useFeedStall';
 import { useMarketFeed } from './useMarketFeed';
 import useSparklineCanvas from './useSparklineCanvas';
 
 const TAPE_ROWS = 4;
 const SPARK_POINTS = 60;
 const PIPELINE = 'datasource → MarketFeed → useSyncExternalStore → canvas';
+const STALL_TIMEOUT = 4000;
 
 type TProps = {
   className?: string;
@@ -37,6 +39,10 @@ export default function MarketTicker(props: TProps) {
   const snapshot = useMarketFeed(TAPE_ROWS, SPARK_POINTS, visible && !paused);
 
   useSparklineCanvas({ rootRef, canvasRef: sparkRef, points: snapshot.history });
+
+  const hasData = snapshot.last > 0;
+  const stalled = useFeedStall({ active: visible && !paused, hasData, timeout: STALL_TIMEOUT });
+  const statusLabel = paused ? 'на паузе' : stalled ? 'нет данных' : MARKET_STATUS_LABEL[snapshot.status];
 
   const change = snapshot.changePercent;
   const slots = Array.from({ length: TAPE_ROWS }, (_, index) => snapshot.tape[index]);
@@ -60,7 +66,7 @@ export default function MarketTicker(props: TProps) {
         </Label>
         <span className={classes.ticker__status}>
           <span className={clsx(classes.ticker__dot, snapshot.status === 'live' && classes.ticker__dot_live)} />
-          <Label>{paused ? 'на паузе' : MARKET_STATUS_LABEL[snapshot.status]}</Label>
+          <Label>{statusLabel}</Label>
         </span>
       </div>
 
@@ -77,13 +83,16 @@ export default function MarketTicker(props: TProps) {
         </span>
         <ol className={classes.ticker__tape} aria-label='Последние сделки'>
           {slots.map((entry, slot) => (
-            <li key={slot} className={classes.ticker__trade}>
+            <li key={slot} className={clsx(classes.ticker__trade, !entry && !stalled && classes.ticker__trade_empty)}>
               {entry && (
                 <>
                   <Label>{formatTime(entry.trade.time)}</Label>
                   <Label className={entry.trade.buy ? classes.ticker__up : classes.ticker__down}>{entry.trade.price.toFixed(1)}</Label>
                   <Label>{entry.trade.qty.toFixed(3)}</Label>
                 </>
+              )}
+              {!entry && stalled && slot === 0 && (
+                <Label className={classes.ticker__stalled}>Поток не ответил — полный виджет ниже по ссылке</Label>
               )}
             </li>
           ))}
