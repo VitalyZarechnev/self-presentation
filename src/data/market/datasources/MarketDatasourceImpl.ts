@@ -23,7 +23,7 @@ export class MarketDatasourceImpl implements IMarketDatasource {
   constructor(private readonly _socket: IWebSocketClient) {}
 
   subscribe(subscriber: TMarketSubscriber): () => void {
-    this._simPrice = SIM_SEED_PRICE + Math.random() * SIM_SEED_RANGE;
+    if (!this._simPrice) this._simPrice = SIM_SEED_PRICE + Math.random() * SIM_SEED_RANGE;
 
     if (!marketConfig.liveEnabled) {
       this._status = 'demo';
