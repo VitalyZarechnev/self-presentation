@@ -1,0 +1,19 @@
+@use '@assets/mixins/hover' as *;
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent);
+  text-decoration: none;
+
+  @include hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  &__icon {
+    width: 14px;
+    height: 14px;
+  }
+}

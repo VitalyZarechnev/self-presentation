@@ -16,9 +16,10 @@ export const sectionsMeta: readonly TSectionMeta[] = [
   },
   { id: 'skills', index: '04', title: 'Навыки', sub: 'Стек и зоны ответственности' },
   { id: 'education', index: '05', title: 'Образование' },
+  { id: 'site', index: '06', title: 'Как сделан сайт', sub: 'Сайт — тоже кейс: как он устроен и почему именно так' },
   {
     id: 'contacts',
-    index: '06',
+    index: '07',
     title: 'Контакты',
     sub: 'Ищу роль Senior Frontend в продукте, где важны архитектура и сложные интерфейсы. Отвечаю в Telegram в течение дня',
   },
