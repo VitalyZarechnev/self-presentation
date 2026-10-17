@@ -34,7 +34,7 @@ export default function Experience() {
 
       <div className={classes.experience__stage}>
         <div className={clsx(classes.experience__pane, !ganttActive && classes.experience__pane_hidden)} inert={!ganttActive}>
-          <Gantt rows={gantt.rows} ticks={gantt.ticks} gridStep={gantt.gridStep} legend={gantt.legend} />
+          <Gantt rows={gantt.rows} ticks={gantt.ticks} gridStep={gantt.gridStep} />
         </div>
         <div className={clsx(classes.experience__pane, ganttActive && classes.experience__pane_hidden)} inert={ganttActive}>
           <Timeline items={timeline} />

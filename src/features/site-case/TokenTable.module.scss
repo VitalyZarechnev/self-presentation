@@ -1,0 +1,65 @@
+.tokens {
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--panel-radius);
+
+  &__caption {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 4px 12px;
+    padding: 10px 16px;
+    color: var(--ink-muted);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--line);
+  }
+
+  & &__hint {
+    letter-spacing: 0.02em;
+    text-transform: none;
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+
+    th,
+    td {
+      padding: 8px 16px;
+      text-align: left;
+      font-weight: 400;
+      border-bottom: 1px solid var(--surface-grid);
+    }
+
+    tr:last-child th,
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    th {
+      color: var(--ink-muted);
+    }
+
+    td {
+      color: var(--ink);
+    }
+  }
+
+  &__value {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__swatch {
+    flex: none;
+    width: 14px;
+    height: 14px;
+    background: var(--swatch);
+    border: 1px solid var(--line);
+  }
+}

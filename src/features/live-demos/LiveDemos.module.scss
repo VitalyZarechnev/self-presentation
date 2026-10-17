@@ -1,0 +1,72 @@
+@use '@assets/mixins/hover' as *;
+
+.live_demos {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+
+    @media (max-width: 860px) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  &__extras {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px 20px;
+  }
+
+  & &__extras_title {
+    color: var(--ink-muted);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  &__extras_list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__extra {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--ink);
+    font-size: 14px;
+    text-decoration: underline;
+    text-decoration-color: var(--line);
+    text-underline-offset: 4px;
+    transition: text-decoration-color 0.15s ease;
+
+    @include hover {
+      text-decoration-color: var(--accent);
+    }
+  }
+
+  &__extra_icon {
+    width: 16px;
+    height: 16px;
+    color: var(--accent);
+  }
+
+  &__sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}

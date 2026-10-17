@@ -28,6 +28,7 @@ export const experienceSchema = z.object({
   officialFrom: experiencePointSchema.optional(),
   stack: z.array(z.string()),
   achievements: z.array(z.string()).optional(),
+  keyResults: z.array(z.string()).optional(),
   projects: z.array(experienceProjectSchema).optional(),
 });
 

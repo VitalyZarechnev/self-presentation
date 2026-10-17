@@ -18,11 +18,11 @@ export const worksList: readonly TWork[] = [
   {
     id: 'bank',
     name: 'Мобильный банк',
-    tech: ['React', 'TypeScript', 'State'],
+    tech: ['React', 'TypeScript', 'useReducer'],
   },
   {
     id: 'market',
-    name: 'Реалтайм binance',
+    name: 'Лента сделок в реальном времени',
     tech: ['WebSocket', 'React', 'Canvas'],
   },
   {

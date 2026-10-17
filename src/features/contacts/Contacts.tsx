@@ -2,6 +2,7 @@ import { contactList } from '@domain/contacts/contactList';
 
 import ActionButton from '@ui/atoms/action-button/ActionButton';
 import Label from '@ui/atoms/typography/Label';
+import ArrowRightIcon from '@ui/icons/arrow-right.svg';
 
 import classes from './Contacts.module.scss';
 
@@ -30,7 +31,8 @@ export default function Contacts() {
       </ul>
 
       <ActionButton className={classes.contacts__cta} href={TELEGRAM_HREF} variant='primary' target='_blank' rel='noopener noreferrer'>
-        Написать в Telegram →
+        Написать в Telegram
+        <ArrowRightIcon className={classes.contacts__cta_icon} aria-hidden />
       </ActionButton>
     </div>
   );

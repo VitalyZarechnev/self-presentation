@@ -1,0 +1,148 @@
+@use '@assets/mixins/hover' as *;
+@use '@assets/mixins/scrollbar' as *;
+@use '@assets/styles/breakpoints' as *;
+
+.site_case {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+
+  &__list {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    background: var(--panel-surface);
+    border: 1px solid var(--line);
+    border-radius: var(--panel-radius);
+  }
+
+  &__item {
+    border-bottom: 1px solid var(--line);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__toggle {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    padding: 18px 20px;
+    color: var(--ink);
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.15s ease;
+
+    @include hover {
+      background: var(--accent-soft);
+    }
+
+    @media (max-width: $breakpoint-mobile) {
+      padding: 16px;
+    }
+  }
+
+  &__heading {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  & &__summary {
+    color: var(--ink-muted);
+  }
+
+  &__chevron {
+    flex: none;
+    width: 14px;
+    height: 14px;
+    margin-top: 5px;
+    color: var(--ink-muted);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  &__chevron_open {
+    transform: rotate(180deg);
+  }
+
+  &__panel {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    padding: 6px 28px 28px;
+
+    @media (max-width: $breakpoint-mobile) {
+      gap: 18px;
+      padding: 4px 18px 22px;
+    }
+  }
+
+  &__points {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 68ch;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__point {
+    position: relative;
+    padding-left: 16px;
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 21px;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 8px;
+      left: 2px;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+  }
+
+  &__code {
+    margin: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--panel-radius);
+  }
+
+  &__file {
+    padding: 10px 16px;
+    overflow-wrap: anywhere;
+    color: var(--ink-muted);
+    font-size: 11px;
+    letter-spacing: 0.02em;
+    border-bottom: 1px solid var(--line);
+  }
+
+  &__pre {
+    margin: 0;
+    padding: 14px 16px;
+    overflow-x: auto;
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.6;
+    tab-size: 2;
+
+    @include nice-scrollbar;
+  }
+
+  &__cta_icon {
+    flex: none;
+    width: 16px;
+    height: 16px;
+  }
+}

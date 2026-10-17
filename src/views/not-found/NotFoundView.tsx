@@ -12,7 +12,7 @@ export default function NotFoundView() {
     <main className={classes.not_found}>
       <SiteHeader />
 
-      <section className={classes.not_found__hero}>
+      <section id='content' className={classes.not_found__hero}>
         <Label as='p' variant='eyebrow' className={classes.not_found__eyebrow}>
           Ошибка · 404
         </Label>

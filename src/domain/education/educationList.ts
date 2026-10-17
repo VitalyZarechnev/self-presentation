@@ -3,6 +3,7 @@ import { TEducation } from './models/Education';
 export const educationList: readonly TEducation[] = [
   {
     id: 'master',
+    kind: 'degree',
     year: 2019,
     qualification: 'Магистр',
     institution: 'ТУСУР',
@@ -10,6 +11,7 @@ export const educationList: readonly TEducation[] = [
   },
   {
     id: 'bachelor',
+    kind: 'degree',
     year: 2017,
     qualification: 'Бакалавр',
     institution: 'ТУСУР',
@@ -17,6 +19,7 @@ export const educationList: readonly TEducation[] = [
   },
   {
     id: 'luxoft-angular',
+    kind: 'course',
     year: 2020,
     qualification: 'Курс «Разработка на Angular»',
     institution: 'Учебный центр Luxoft',
