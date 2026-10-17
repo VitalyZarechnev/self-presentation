@@ -1,0 +1,126 @@
+@use '@assets/mixins/hover' as *;
+@use '@assets/styles/breakpoints' as *;
+
+.card {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  overflow: hidden;
+  color: var(--ink);
+  background: var(--panel-surface);
+  border: 1px solid var(--line);
+  border-radius: var(--panel-radius);
+
+  &__stage {
+    position: relative;
+    display: block;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-bottom: 1px solid var(--line);
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 20px 20px 22px;
+  }
+
+  & &__proves {
+    max-width: 52ch;
+    color: var(--ink-muted);
+  }
+
+  &__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  &__open {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 6px;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+
+  &__open_icon {
+    width: 14px;
+    height: 14px;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @include hover {
+    .card__open_icon {
+      transform: translateX(4px);
+    }
+
+    .card__stage img {
+      transform: scale(1.03);
+    }
+  }
+
+  &_layout_feature,
+  &_layout_inline {
+    grid-column: 1 / -1;
+  }
+
+  &_layout_feature {
+    @media (min-width: 861px) {
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+      grid-template-rows: none;
+
+      .card__stage {
+        aspect-ratio: auto;
+        min-height: 340px;
+        border-right: 1px solid var(--line);
+        border-bottom: none;
+      }
+
+      .card__body {
+        justify-content: center;
+        padding: 28px;
+      }
+    }
+  }
+
+  &_layout_inline {
+    .card__stage {
+      aspect-ratio: auto;
+      padding: 24px 24px 18px;
+    }
+
+    @media (min-width: 861px) {
+      grid-template-columns: auto minmax(0, 1fr);
+      grid-template-rows: none;
+
+      .card__stage {
+        min-width: 220px;
+        border-right: 1px solid var(--line);
+        border-bottom: none;
+      }
+
+      .card__body {
+        justify-content: center;
+        padding: 28px;
+      }
+    }
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    &__stage {
+      aspect-ratio: 16 / 10;
+    }
+
+    &__body {
+      padding: 16px 16px 18px;
+    }
+  }
+}

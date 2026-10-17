@@ -1,0 +1,244 @@
+@use '@assets/mixins/hover' as *;
+@use '@assets/styles/breakpoints' as *;
+
+.ticker {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  background: var(--panel-surface);
+  border: 1px solid var(--line);
+  border-radius: var(--panel-radius);
+  font-variant-numeric: tabular-nums;
+
+  &__head {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 18px 14px 0;
+  }
+
+  & &__pair {
+    color: var(--ink-muted);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+  }
+
+  &__toggle {
+    margin: -6px -8px -6px 0;
+    padding: 6px 8px;
+    color: var(--ink-muted);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 0.15s ease;
+
+    @include hover {
+      color: var(--accent);
+    }
+
+    @media (pointer: coarse) {
+      min-height: 44px;
+      margin-block: -16px;
+      padding-inline: 12px;
+    }
+  }
+
+  &__quote {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 4px 14px 0;
+  }
+
+  & &__price {
+    min-width: 8ch;
+    color: var(--ink);
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 1.1;
+
+    @media (max-width: $breakpoint-mobile) {
+      font-size: 26px;
+    }
+  }
+
+  & &__change {
+    min-width: 7ch;
+    font-size: 13px;
+  }
+
+  &__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+    color: var(--ink-muted);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  &__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ink-muted);
+  }
+
+  &__dot_live {
+    background: var(--positive);
+  }
+
+  & &__up {
+    color: var(--positive);
+  }
+
+  & &__down {
+    color: var(--danger);
+  }
+
+  &__chart {
+    position: relative;
+    margin-top: 12px;
+    padding: 16px 0 14px;
+    border-top: 1px solid var(--line);
+  }
+
+  &__spark {
+    display: block;
+    width: 100%;
+    height: 56px;
+
+    @media (max-width: $breakpoint-mobile) {
+      height: 40px;
+    }
+  }
+
+  &__tape_wrap {
+    position: relative;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+  }
+
+  &__tape {
+    margin: 0;
+    padding: 0 0 6px;
+    list-style: none;
+  }
+
+  &__note {
+    position: absolute;
+    top: 0;
+    left: 12px;
+    z-index: 1;
+    padding: 0 6px;
+    color: var(--ink-muted);
+    font-size: 11px;
+    line-height: 1;
+    white-space: nowrap;
+    background: var(--panel-surface);
+    transform: translateY(-50%);
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 12px;
+      width: 1px;
+      height: 9px;
+      background: var(--ink-muted);
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 10px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--ink-muted);
+    }
+  }
+
+  &__trade {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
+    height: 22px;
+    padding: 0 14px;
+    color: var(--ink-muted);
+    font-size: 12px;
+
+    > :last-child {
+      text-align: right;
+    }
+
+    @media (max-width: $breakpoint-mobile) {
+      &:nth-child(n + 3) {
+        display: none;
+      }
+    }
+  }
+
+  &__trade_empty::before {
+    content: '';
+    grid-column: 1 / -1;
+    height: 8px;
+    width: 72%;
+    background: var(--line);
+    opacity: 0.6;
+  }
+
+  & &__stalled {
+    grid-column: 1 / -1;
+    color: var(--ink-muted);
+    font-size: 11px;
+    text-align: left;
+  }
+
+  &__caption {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 14px 12px;
+    border-top: 1px solid var(--line);
+  }
+
+  &__sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  &__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--accent);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+
+    @include hover {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+  }
+
+  &__link_icon {
+    width: 14px;
+    height: 14px;
+  }
+}

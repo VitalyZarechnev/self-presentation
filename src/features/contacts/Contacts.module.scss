@@ -1,4 +1,5 @@
 @use '@assets/mixins/hover' as *;
+@use '@assets/styles/breakpoints' as *;
 
 .contacts {
   display: flex;
@@ -26,6 +27,13 @@
     text-decoration: none;
     transition: color 0.15s ease;
 
+    @media (max-width: $breakpoint-mobile) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+      padding: 14px 0;
+    }
+
     @include hover {
       color: var(--accent);
 
@@ -40,7 +48,15 @@
   }
 
   &__value {
+    min-width: 0;
     color: var(--ink);
+    overflow-wrap: anywhere;
     transition: color 0.15s ease;
+  }
+
+  &__cta_icon {
+    width: 16px;
+    height: 16px;
+    flex: none;
   }
 }

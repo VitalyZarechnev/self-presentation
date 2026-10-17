@@ -1,0 +1,30 @@
+.preview {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+
+  &__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: var(--preview-fit, cover);
+    object-position: var(--preview-focus, 50% 50%);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  &__image_paper {
+    display: none;
+  }
+
+  :global(html[data-theme='barely-there']) & {
+    .preview__image_blueprint {
+      display: none;
+    }
+
+    .preview__image_paper {
+      display: block;
+    }
+  }
+}

@@ -35,7 +35,7 @@
 }
 
 .board__win {
-  stroke: var(--danger);
+  stroke: var(--ink);
   stroke-width: 6;
 }
 
@@ -45,11 +45,10 @@
   left: 50%;
   z-index: 3;
   padding: 6px 14px;
-  color: var(--positive);
+  color: var(--accent);
   background: var(--surface);
-  border: 1.5px solid var(--positive);
-  border-radius: 6px;
-  box-shadow: 0 4px 14px rgb(0 0 0 / 18%);
+  border: 1px solid var(--accent);
+  border-radius: var(--panel-radius);
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
@@ -63,7 +62,7 @@
 
   @include hover {
     color: var(--surface);
-    background: var(--positive);
+    background: var(--accent);
   }
 }
 

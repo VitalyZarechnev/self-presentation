@@ -28,6 +28,12 @@
     padding: 48px 24px 120px;
   }
 
+  &__back_icon {
+    width: 16px;
+    height: 16px;
+    flex: none;
+  }
+
   &__back {
     align-self: flex-start;
   }
