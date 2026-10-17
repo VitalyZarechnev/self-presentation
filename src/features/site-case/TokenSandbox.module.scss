@@ -1,0 +1,112 @@
+@use '@assets/mixins/hover' as *;
+@use '@assets/styles/breakpoints' as *;
+
+.sandbox {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 28px;
+  padding: 20px;
+  border: 1px solid var(--accent);
+  border-radius: var(--panel-radius);
+
+  @media (max-width: $breakpoint-mobile) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+    padding: 16px;
+  }
+
+  &__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 12px;
+    grid-column: 1 / -1;
+  }
+
+  & &__title {
+    color: var(--accent);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  & &__hint {
+    color: var(--ink-muted);
+    font-size: 11px;
+  }
+
+  &__swatch {
+    flex: none;
+    width: 12px;
+    height: 12px;
+    background: var(--swatch);
+    border: 1px solid var(--line);
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 12px;
+    grid-column: 1 / -1;
+    padding-top: 4px;
+  }
+
+  &__button {
+    min-height: 40px;
+    padding: 10px 16px;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: transparent;
+    border: 1px solid var(--accent);
+    border-radius: var(--panel-radius);
+    cursor: pointer;
+    transition:
+      background 0.15s ease,
+      color 0.15s ease;
+
+    @include hover {
+      color: var(--surface);
+      background: var(--accent);
+    }
+
+    &:disabled {
+      color: var(--ink-muted);
+      border-color: var(--line);
+      cursor: default;
+
+      @include hover {
+        color: var(--ink-muted);
+        background: transparent;
+      }
+    }
+
+    @media (pointer: coarse) {
+      min-height: 44px;
+    }
+
+    @media (max-width: $breakpoint-mobile) {
+      width: 100%;
+    }
+  }
+
+  &__status {
+    color: var(--ink-muted);
+    font-size: 11px;
+  }
+
+  &__json {
+    grid-column: 1 / -1;
+    max-height: 220px;
+    margin: 0;
+    padding: 12px;
+    overflow: auto;
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    border: 1px solid var(--line);
+  }
+}

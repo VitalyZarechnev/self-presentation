@@ -6,6 +6,8 @@ import Experience from '@features/experience/Experience';
 import Highlights from '@features/highlights/Highlights';
 import LiveDemos from '@features/live-demos/LiveDemos';
 import MarketTicker from '@features/market/MarketTicker';
+import SiteCase from '@features/site-case/SiteCase';
+import SiteSourceLink from '@features/site-case/SiteSourceLink';
 import { sectionsMeta } from '@features/site-header/sections';
 import SiteHeader from '@features/site-header/SiteHeader';
 import Skills from '@features/skills/Skills';
@@ -26,6 +28,7 @@ const SECTION_BODIES: Record<string, ReactNode> = {
   works: <LiveDemos />,
   skills: <Skills />,
   education: <Education />,
+  site: <SiteCase />,
   contacts: <Contacts />,
 };
 
@@ -85,9 +88,7 @@ export default function HomeView() {
         ))}
       </div>
       <footer className={classes.home_view__footer}>
-        <Label as='p' className={classes.home_view__footer_case}>
-          Сайт — тоже кейс: Next.js 16, React 19, Clean Architecture, две темы на CSS-токенах
-        </Label>
+        <SiteSourceLink />
         <Label as='p'>© {BUILD_YEAR} Виталий Заречнев</Label>
       </footer>
     </main>

@@ -152,7 +152,7 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 88px;
+    gap: var(--section-gap, 88px);
     max-width: 900px;
     margin: 0 auto;
     padding: 0 24px 72px 44px;
@@ -168,7 +168,7 @@
     }
 
     @media (max-width: $breakpoint-mobile) {
-      gap: 64px;
+      gap: calc(var(--section-gap, 88px) * 0.73);
       padding-bottom: 56px;
       padding-left: 28px;
 
@@ -197,10 +197,6 @@
     }
   }
 
-  & &__footer_case {
-    max-width: 52ch;
-  }
-
   &__section_head {
     display: flex;
     gap: 14px;
@@ -223,5 +219,6 @@
     max-width: 60ch;
     color: var(--ink-muted);
     font-size: 14px;
+    line-height: 1.5;
   }
 }

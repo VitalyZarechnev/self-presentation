@@ -8,15 +8,17 @@ import { THEME_LABELS } from '@application/theme/themes';
 
 import ActionButton from '@ui/atoms/action-button/ActionButton';
 import Moon from '@ui/icons/moon.svg';
+import SlidersIcon from '@ui/icons/sliders.svg';
 import Sun from '@ui/icons/sun.svg';
 
 import { sectionsMeta } from './sections';
 import classes from './SiteHeader.module.scss';
 
+const CUSTOM_THEME_LABEL = 'Своя';
 const TELEGRAM_HREF = 'https://t.me/VitalyZarechnev';
 
 export default function SiteHeader() {
-  const { theme, themes, setTheme } = useTheme();
+  const { themes, selection, custom, setTheme, selectCustom } = useTheme();
 
   return (
     <>
@@ -42,7 +44,7 @@ export default function SiteHeader() {
             <div className={classes.theme} role='radiogroup' aria-label='Оформление'>
               {themes.map((item) => {
                 const Icon = item === 'blueprint' ? Moon : Sun;
-                const active = theme === item;
+                const active = selection === item;
                 return (
                   <button
                     key={item}
@@ -50,14 +52,27 @@ export default function SiteHeader() {
                     role='radio'
                     aria-checked={active}
                     aria-label={THEME_LABELS[item]}
+                    title={THEME_LABELS[item]}
                     className={clsx(classes.themeOption, active && classes.themeOptionActive)}
                     onClick={() => setTheme(item)}
                   >
                     <Icon className={classes.themeIcon} />
-                    <span className={classes.themeLabel}>{THEME_LABELS[item]}</span>
                   </button>
                 );
               })}
+              {custom && (
+                <button
+                  type='button'
+                  role='radio'
+                  aria-checked={selection === 'custom'}
+                  aria-label={CUSTOM_THEME_LABEL}
+                  title={CUSTOM_THEME_LABEL}
+                  className={clsx(classes.themeOption, selection === 'custom' && classes.themeOptionActive)}
+                  onClick={selectCustom}
+                >
+                  <SlidersIcon className={classes.themeIcon} />
+                </button>
+              )}
             </div>
 
             <ActionButton href={TELEGRAM_HREF} variant='primary' target='_blank' rel='noopener noreferrer' className={classes.cta}>

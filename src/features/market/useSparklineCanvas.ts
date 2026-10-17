@@ -18,7 +18,7 @@ function accentColor(el: Element): string {
 
 export default function useSparklineCanvas(params: TParams) {
   const { rootRef, canvasRef, points } = params;
-  const { theme } = useTheme();
+  const { theme, selection, custom } = useTheme();
   const drawRef = useRef<() => void>(() => {});
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export default function useSparklineCanvas(params: TParams) {
     const color = rootRef.current ? accentColor(rootRef.current) : DEFAULT_ACCENT;
     drawRef.current = () => renderSparkline({ canvas, points, color });
     drawRef.current();
-  }, [canvasRef, rootRef, points, theme]);
+  }, [canvasRef, rootRef, points, theme, selection, custom]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
