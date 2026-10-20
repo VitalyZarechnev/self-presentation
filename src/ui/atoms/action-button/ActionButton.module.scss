@@ -3,7 +3,9 @@
 .action {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
+  min-height: 44px;
   padding: 12px 22px;
   border: 1px solid var(--accent);
   border-radius: var(--panel-radius);
