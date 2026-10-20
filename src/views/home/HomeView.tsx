@@ -41,7 +41,7 @@ export default function HomeView() {
 
       <section id='content' className={classes.home_view__hero} aria-labelledby='hero-title'>
         <Heading variant='h1' id='hero-title' className={classes.home_view__title}>
-          Архитектура фронтенда, которая держит нагрузку и команду
+          Веду фронтенд от архитектуры до продакшна и команду, которая это делает
         </Heading>
 
         <div className={classes.home_view__intro}>

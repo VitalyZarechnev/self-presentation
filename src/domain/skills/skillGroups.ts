@@ -4,17 +4,17 @@ export const skillGroups: readonly TSkillGroup[] = [
   {
     id: 'languages',
     title: 'Языки и фреймворки',
-    items: ['JavaScript', 'TypeScript', 'React', 'Next.js', 'Vue.js', 'Node.js'],
+    items: ['TypeScript', 'JavaScript', 'React', 'Next.js', 'Node.js', 'Vue.js'],
   },
   {
     id: 'state',
     title: 'Состояние и данные',
-    items: ['Redux', 'Redux-Saga', 'MobX', 'Pinia', 'GraphQL', 'WebSocket', 'SSE'],
+    items: ['TanStack Query', 'MobX', 'Zod', 'WebSocket', 'SSE', 'GraphQL', 'Redux', 'Redux-Saga', 'Pinia'],
   },
   {
     id: 'ui',
     title: 'UI и стилизация',
-    items: ['SCSS', 'Stylus', 'Tailwind', 'MUI', 'Ant Design', 'Chakra UI', 'Radix UI', 'БЭМ'],
+    items: ['SCSS Modules', 'Radix UI', 'Tailwind', 'MUI', 'Ant Design', 'Chakra UI', 'Stylus', 'БЭМ'],
   },
   {
     id: 'graphics',
@@ -24,7 +24,21 @@ export const skillGroups: readonly TSkillGroup[] = [
   {
     id: 'tooling',
     title: 'Инструменты и качество',
-    items: ['Webpack', 'Single-SPA', 'Git', 'Jest', 'Enzyme', 'SSR', 'Кроссбраузерная вёрстка'],
+    items: [
+      'Clean Architecture',
+      'Vitest',
+      'Testing Library',
+      'React Compiler',
+      'ESLint',
+      'GitHub Actions',
+      'SSR',
+      'Git',
+      'Кроссбраузерная вёрстка',
+      'Webpack',
+      'Single-SPA',
+      'Jest',
+      'Enzyme',
+    ],
   },
   {
     id: 'management',
