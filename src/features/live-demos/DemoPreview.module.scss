@@ -27,4 +27,15 @@
       display: block;
     }
   }
+
+  // Snapshots are shot in the stock palettes; under a custom theme they are reprinted
+  // in the visitor's accent so they don't fight the recoloured page.
+  :global(html[data-custom]) & {
+    isolation: isolate;
+    background: var(--accent);
+
+    .preview__image {
+      mix-blend-mode: luminosity;
+    }
+  }
 }

@@ -41,8 +41,8 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    min-height: 44px;
     margin-top: auto;
-    padding-top: 6px;
     color: var(--accent);
     font-family: var(--font-mono);
     font-size: 12px;
@@ -68,11 +68,13 @@
   }
 
   &_layout_feature,
+  &_layout_feature_reverse,
   &_layout_inline {
     grid-column: 1 / -1;
   }
 
-  &_layout_feature {
+  &_layout_feature,
+  &_layout_feature_reverse {
     @media (min-width: 861px) {
       grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
       grid-template-rows: none;
@@ -87,6 +89,18 @@
       .card__body {
         justify-content: center;
         padding: 28px;
+      }
+    }
+  }
+
+  &_layout_feature_reverse {
+    @media (min-width: 861px) {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+
+      .card__stage {
+        order: 2;
+        border-right: none;
+        border-left: 1px solid var(--line);
       }
     }
   }

@@ -12,7 +12,7 @@ import ArrowRightIcon from '@ui/icons/arrow-right.svg';
 
 import classes from './DemoCard.module.scss';
 
-export type TDemoCardLayout = 'feature' | 'half' | 'inline';
+export type TDemoCardLayout = 'feature' | 'feature_reverse' | 'inline';
 
 type TProps = {
   demo: TLiveDemo;
@@ -47,7 +47,7 @@ export default function DemoCard(props: TProps) {
         </div>
         {href && (
           <Link href={href} className={classes.card__open}>
-            <Label>Открыть демо</Label>
+            <Label>Открыть живую версию</Label>
             <ArrowRightIcon className={classes.card__open_icon} aria-hidden />
           </Link>
         )}
