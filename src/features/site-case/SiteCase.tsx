@@ -17,10 +17,11 @@ import classes from './SiteCase.module.scss';
 import TokenSandbox from './TokenSandbox';
 import TokenTable from './TokenTable';
 
-const DEFAULT_OPEN = 'themes';
+// Everything starts folded: three one-line summaries read faster than the sandbox, table and code of an open aspect.
+const NOTHING_OPEN: ReadonlySet<string> = new Set();
 
 export default function SiteCase() {
-  const [open, setOpen] = useState<ReadonlySet<string>>(() => new Set([DEFAULT_OPEN]));
+  const [open, setOpen] = useState<ReadonlySet<string>>(NOTHING_OPEN);
 
   const toggle = (id: string): void => {
     setOpen((prev) => {
