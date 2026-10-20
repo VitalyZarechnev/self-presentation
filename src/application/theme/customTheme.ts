@@ -1,4 +1,4 @@
-import { contrastRatio, hexToRgba, oklchToHex } from '@utils/color';
+import { contrastRatio, hexToOklch, hexToRgba, oklchToHex } from '@utils/color';
 
 import { TTheme } from './themes';
 
@@ -37,7 +37,42 @@ export const CUSTOM_VAR_NAMES = [
 ] as const;
 
 export const DEFAULT_SURFACE_HUE: Record<TTheme, number> = { blueprint: 247, 'barely-there': 87 };
-export const DEFAULT_ACCENT_HUE: Record<TTheme, number> = { blueprint: 249, 'barely-there': 30 };
+export const DEFAULT_ACCENT_HUE: Record<TTheme, number> = { blueprint: 249, 'barely-there': 70 };
+
+export type TStatus = 'danger' | 'positive';
+export type THueBand = { status: TStatus; from: number; to: number };
+export type TClearedHue = { hue: number; avoided: TStatus | null };
+
+// Mirrors --danger / --positive in themes.scss (a test keeps them in sync).
+export const STATUS_COLORS: Record<TTheme, Record<TStatus, string>> = {
+  blueprint: { danger: '#ff6b6b', positive: '#5ad38f' },
+  'barely-there': { danger: '#d64545', positive: '#2f8f5b' },
+};
+export const STATUS_LABELS: Record<TStatus, string> = { danger: 'падение', positive: 'рост' };
+// Data colours own these hues: an accent closer than this reads as a price move.
+export const STATUS_HUE_CLEARANCE = 30;
+
+const FULL_TURN = 360;
+const wrapHue = (hue: number): number => ((hue % FULL_TURN) + FULL_TURN) % FULL_TURN;
+const hueDelta = (from: number, to: number): number => wrapHue(to - from + FULL_TURN / 2) - FULL_TURN / 2;
+
+function statusHues(base: TTheme): ReadonlyArray<readonly [TStatus, number]> {
+  return (Object.entries(STATUS_COLORS[base]) as [TStatus, string][]).map(([status, hex]) => [status, hexToOklch(hex).h]);
+}
+
+export function statusHueBands(base: TTheme): THueBand[] {
+  return statusHues(base).map(([status, hue]) => ({ status, from: hue - STATUS_HUE_CLEARANCE, to: hue + STATUS_HUE_CLEARANCE }));
+}
+
+export function clearOfStatus(hue: number, base: TTheme): TClearedHue {
+  const collision = statusHues(base).find(([, center]) => Math.abs(hueDelta(center, hue)) < STATUS_HUE_CLEARANCE);
+  if (!collision) return { hue, avoided: null };
+
+  const [status, center] = collision;
+  const upward = hueDelta(center, hue) >= 0;
+  const edge = upward ? Math.ceil(center + STATUS_HUE_CLEARANCE) : Math.floor(center - STATUS_HUE_CLEARANCE);
+  return { hue: wrapHue(edge), avoided: status };
+}
 
 const LIGHTNESS_STEP = 0.01;
 
@@ -162,7 +197,7 @@ export function buildCustomVars(theme: TCustomTheme, baseSurface: string): Recor
 
   if (theme.accentHue === null) return vars;
 
-  const accent = resolveAccent({ hue: theme.accentHue, surface, dark }).hex;
+  const accent = resolveAccent({ hue: clearOfStatus(theme.accentHue, theme.base).hue, surface, dark }).hex;
   return {
     ...vars,
     '--accent': accent,

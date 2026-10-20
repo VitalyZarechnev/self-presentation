@@ -5,6 +5,7 @@ import { CSSProperties, useEffect, useState } from 'react';
 import {
   ACCENT_SHAPE,
   buildCustomVars,
+  clearOfStatus,
   CUSTOM_VAR_NAMES,
   DEFAULT_ACCENT_HUE,
   DEFAULT_SURFACE_HUE,
@@ -12,8 +13,11 @@ import {
   isDarkTheme,
   resolveAccent,
   resolveNeutrals,
+  STATUS_LABELS,
+  statusHueBands,
   SURFACE_PREVIEW,
   toDesignTokens,
+  TStatus,
 } from '@application/theme/customTheme';
 import { useTheme } from '@application/theme/ThemeProvider';
 
@@ -24,6 +28,7 @@ import classes from './TokenSandbox.module.scss';
 
 const COPY_RESET_MS = 2400;
 const UNTOUCHED = 'как в теме · сдвиньте, чтобы выбрать свой';
+const BANDS_NOTE = 'Притушенные участки заняты цветами роста и падения: акцент их перепрыгивает';
 
 type TCopyState = 'idle' | 'copied' | 'failed';
 
@@ -34,6 +39,7 @@ export default function TokenSandbox() {
   const [baseSurface, setBaseSurface] = useState('');
   const [copy, setCopy] = useState<TCopyState>('idle');
   const [exported, setExported] = useState('');
+  const [avoided, setAvoided] = useState<TStatus | null>(null);
 
   const active = selection === 'custom' && custom ? custom : defaultCustomTheme(theme);
   const dark = isDarkTheme(active.base);
@@ -43,6 +49,13 @@ export default function TokenSandbox() {
   const neutrals = active.surfaceHue === null ? null : resolveNeutrals({ hue: surfaceHue, dark });
   const surface = neutrals?.surface ?? baseSurface;
   const accent = active.accentHue === null || !surface ? null : resolveAccent({ hue: accentHue, surface, dark });
+  const avoidedNote = accent && avoided ? ` · обходит цвет «${STATUS_LABELS[avoided]}»` : '';
+
+  const handleAccent = (hue: number): void => {
+    const cleared = clearOfStatus(hue, active.base);
+    setAvoided(cleared.avoided);
+    updateCustom({ accentHue: cleared.hue });
+  };
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => {
@@ -101,7 +114,9 @@ export default function TokenSandbox() {
         label='Акцент'
         hue={accentHue}
         track={ACCENT_SHAPE[dark ? 'dark' : 'light']}
-        valueText={accent ? `оттенок ${Math.round(accentHue)}°, контраст ${ratio(accent.contrast)}` : 'как в теме'}
+        valueText={accent ? `оттенок ${Math.round(accentHue)}°, контраст ${ratio(accent.contrast)}${avoidedNote}` : 'как в теме'}
+        bands={statusHueBands(active.base)}
+        note={BANDS_NOTE}
         readout={
           accent ? (
             <>
@@ -109,13 +124,14 @@ export default function TokenSandbox() {
               <Label>
                 {accent.hex} · {ratio(accent.contrast)}
                 {accent.adjusted ? ' · светлота подстроена' : ''}
+                {avoidedNote}
               </Label>
             </>
           ) : (
             <Label>{UNTOUCHED}</Label>
           )
         }
-        onChange={(hue) => updateCustom({ accentHue: hue })}
+        onChange={handleAccent}
       />
 
       <div className={classes.sandbox__actions}>
