@@ -1,3 +1,4 @@
+@use '@assets/mixins/hit-area' as *;
 @use '@assets/styles/breakpoints' as *;
 
 .header {
@@ -33,6 +34,8 @@
   line-height: 1.15;
   color: var(--ink);
   text-decoration: none;
+
+  @include hit-area-y;
 }
 
 .name,
@@ -112,6 +115,8 @@
     color 0.15s ease,
     background 0.15s ease;
 
+  @include hit-area-y;
+
   &:hover {
     color: var(--ink);
   }
@@ -134,8 +139,11 @@
 }
 
 .header .cta {
+  min-height: 0;
   padding: 8px 14px;
   font-size: 13px;
+
+  @include hit-area-y;
 
   @media (max-width: $breakpoint-mobile) {
     padding: 7px 11px;

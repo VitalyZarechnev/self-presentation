@@ -20,6 +20,10 @@
       color 0.15s ease,
       background 0.15s ease;
 
+    @media (pointer: coarse) {
+      padding-block: 14px;
+    }
+
     @include hover {
       color: var(--ink);
     }
