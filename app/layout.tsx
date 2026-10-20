@@ -12,7 +12,7 @@ const THEME_INIT_SRC = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/theme-init.js
 
 const TITLE = 'Виталий Заречнев — Senior Frontend Engineer';
 const DESCRIPTION =
-  'Архитектура фронтенда, которая держит нагрузку и команду: Clean Architecture, живые демо, финтех, блокчейн, IoT, бортовые системы, AI-интерфейсы.';
+  'Веду фронтенд от архитектуры до продакшна и команду, которая это делает: Clean Architecture, живые демо, финтех, блокчейн, IoT, бортовые системы, AI-интерфейсы.';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL;
 const OG_IMAGE = { url: 'og.png', width: 1200, height: 630, alt: TITLE };
