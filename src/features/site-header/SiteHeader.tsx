@@ -3,6 +3,8 @@
 import clsx from 'clsx';
 import Link from 'next/link';
 
+import { useLocale } from '@application/locale/LocaleProvider';
+import { LOCALE_LABELS } from '@application/locale/locales';
 import { useTheme } from '@application/theme/ThemeProvider';
 import { THEME_LABELS } from '@application/theme/themes';
 
@@ -14,26 +16,33 @@ import Sun from '@ui/icons/sun.svg';
 import { sectionsMeta } from './sections';
 import classes from './SiteHeader.module.scss';
 
-const CUSTOM_THEME_LABEL = 'Своя';
 const TELEGRAM_HREF = 'https://t.me/VitalyZarechnev';
+
+const MESSAGES = {
+  ru: { skip: 'Перейти к содержимому', name: 'Виталий Заречнев', nav: 'Разделы', theme: 'Оформление', custom: 'Своя', write: 'Написать' },
+  en: { skip: 'Skip to content', name: 'Vitaly Zarechnev', nav: 'Sections', theme: 'Appearance', custom: 'Custom', write: 'Message me' },
+} as const;
 
 export default function SiteHeader() {
   const { themes, selection, custom, setTheme, selectCustom } = useTheme();
+  const { locale, setLocale } = useLocale();
+  const t = MESSAGES[locale];
+  const otherLocale = locale === 'ru' ? 'en' : 'ru';
 
   return (
     <>
       <a href='#content' className={classes.skip}>
-        Перейти к содержимому
+        {t.skip}
       </a>
       <header className={classes.header}>
         <div className={classes.inner}>
           <Link href='/' className={classes.brand}>
-            <span className={classes.name}>Виталий Заречнев</span>
+            <span className={classes.name}>{t.name}</span>
             <span className={classes.role}>Senior Frontend Engineer</span>
           </Link>
 
-          <nav className={classes.nav} aria-label='Разделы'>
-            {sectionsMeta.map((section) => (
+          <nav className={classes.nav} aria-label={t.nav}>
+            {sectionsMeta[locale].map((section) => (
               <Link key={section.id} href={`/#${section.id}`} className={classes.navLink}>
                 {section.title}
               </Link>
@@ -41,7 +50,7 @@ export default function SiteHeader() {
           </nav>
 
           <div className={classes.actions}>
-            <div className={classes.theme} role='radiogroup' aria-label='Оформление'>
+            <div className={classes.theme} role='radiogroup' aria-label={t.theme}>
               {themes.map((item) => {
                 const Icon = item === 'blueprint' ? Moon : Sun;
                 const active = selection === item;
@@ -65,8 +74,8 @@ export default function SiteHeader() {
                   type='button'
                   role='radio'
                   aria-checked={selection === 'custom'}
-                  aria-label={CUSTOM_THEME_LABEL}
-                  title={CUSTOM_THEME_LABEL}
+                  aria-label={t.custom}
+                  title={t.custom}
                   className={clsx(classes.themeOption, selection === 'custom' && classes.themeOptionActive)}
                   onClick={selectCustom}
                 >
@@ -75,8 +84,19 @@ export default function SiteHeader() {
               )}
             </div>
 
+            <button
+              type='button'
+              lang={otherLocale}
+              aria-label={LOCALE_LABELS[otherLocale].switchTo}
+              title={LOCALE_LABELS[otherLocale].switchTo}
+              className={classes.lang}
+              onClick={() => setLocale(otherLocale)}
+            >
+              {LOCALE_LABELS[otherLocale].short}
+            </button>
+
             <ActionButton href={TELEGRAM_HREF} variant='primary' target='_blank' rel='noopener noreferrer' className={classes.cta}>
-              Написать
+              {t.write}
             </ActionButton>
           </div>
         </div>

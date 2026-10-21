@@ -2,16 +2,20 @@
 
 import { ComponentType, CSSProperties, useRef } from 'react';
 
+import { useLocalized } from '@application/locale/LocaleProvider';
+
 import { TWork } from '@domain/works/worksList';
 
 import Tag from '@ui/atoms/tag/Tag';
 import Heading from '@ui/atoms/typography/Heading';
-import Label from '@ui/atoms/typography/Label';
 import ArrowUpRightIcon from '@ui/icons/arrow-up-right.svg';
 
 import { useInView } from '@utils/hooks/useInView';
 
+import LoadingLabel from './LoadingLabel';
 import classes from './Works.module.scss';
+
+const OPEN_IN_TAB = { ru: (name: string) => `Открыть ${name} в новой вкладке`, en: (name: string) => `Open ${name} in a new tab` } as const;
 
 type TProps = {
   work: TWork;
@@ -23,6 +27,7 @@ type TProps = {
 export default function WorkItem({ work, widget: Widget, minHeight, scale }: TProps) {
   const stageRef = useRef<HTMLDivElement>(null);
   const inView = useInView(stageRef);
+  const openInTab = useLocalized(OPEN_IN_TAB);
 
   const stageStyle = minHeight
     ? ({
@@ -39,13 +44,7 @@ export default function WorkItem({ work, widget: Widget, minHeight, scale }: TPr
             {work.name}
           </Heading>
           {work.link && (
-            <a
-              className={classes.work__link}
-              href={work.link}
-              target='_blank'
-              rel='noopener noreferrer'
-              aria-label={`Открыть ${work.name} в новой вкладке`}
-            >
+            <a className={classes.work__link} href={work.link} target='_blank' rel='noopener noreferrer' aria-label={openInTab(work.name)}>
               <ArrowUpRightIcon />
             </a>
           )}
@@ -66,9 +65,7 @@ export default function WorkItem({ work, widget: Widget, minHeight, scale }: TPr
             <Widget />
           )
         ) : (
-          <Label as='div' className={classes.work__placeholder}>
-            Загрузка…
-          </Label>
+          <LoadingLabel className={classes.work__placeholder} />
         )}
       </div>
     </article>

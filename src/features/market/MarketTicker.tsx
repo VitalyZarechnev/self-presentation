@@ -4,6 +4,8 @@ import { useRef, useState } from 'react';
 import clsx from 'clsx';
 import Link from 'next/link';
 
+import { useLocale } from '@application/locale/LocaleProvider';
+
 import { marketConfig } from '@domain/market/marketConfig';
 
 import Label from '@ui/atoms/typography/Label';
@@ -22,6 +24,31 @@ const TAPE_ROWS = 4;
 const SPARK_POINTS = 60;
 const PIPELINE = 'datasource → MarketFeed → useSyncExternalStore → canvas';
 const STALL_TIMEOUT = 4000;
+
+const MESSAGES = {
+  ru: {
+    paused: 'на паузе',
+    noData: 'нет данных',
+    figure: 'Поток сделок',
+    resume: 'Запустить',
+    pause: 'Пауза',
+    tape: 'Последние сделки',
+    stalled: 'Поток не ответил — полный виджет ниже по ссылке',
+    pipeline: 'Схема потока',
+    widget: 'Весь виджет',
+  },
+  en: {
+    paused: 'paused',
+    noData: 'no data',
+    figure: 'Trade stream',
+    resume: 'Resume',
+    pause: 'Pause',
+    tape: 'Latest trades',
+    stalled: 'The stream did not answer — the full widget is behind the link below',
+    pipeline: 'Data flow',
+    widget: 'Full widget',
+  },
+} as const;
 
 type TProps = {
   className?: string;
@@ -42,20 +69,22 @@ export default function MarketTicker(props: TProps) {
 
   const hasData = snapshot.last > 0;
   const stalled = useFeedStall({ active: visible && !paused, hasData, timeout: STALL_TIMEOUT });
-  const statusLabel = paused ? 'на паузе' : stalled ? 'нет данных' : MARKET_STATUS_LABEL[snapshot.status];
+  const { locale } = useLocale();
+  const t = MESSAGES[locale];
+  const statusLabel = paused ? t.paused : stalled ? t.noData : MARKET_STATUS_LABEL[locale][snapshot.status];
 
   const change = snapshot.changePercent;
   const slots = Array.from({ length: TAPE_ROWS }, (_, index) => snapshot.tape[index]);
 
   return (
-    <figure className={clsx(classes.ticker, className)} ref={rootRef} aria-label={`Поток сделок ${marketConfig.pair}`}>
+    <figure className={clsx(classes.ticker, className)} ref={rootRef} aria-label={`${t.figure} ${marketConfig.pair}`}>
       <div className={classes.ticker__head}>
         <span className={classes.ticker__note} aria-hidden>
           datasource
         </span>
         <Label className={classes.ticker__pair}>{marketConfig.pair}</Label>
         <button type='button' className={classes.ticker__toggle} aria-pressed={paused} onClick={() => setPausedByUser(!paused)}>
-          <Label>{paused ? 'Запустить' : 'Пауза'}</Label>
+          <Label>{paused ? t.resume : t.pause}</Label>
         </button>
       </div>
 
@@ -81,7 +110,7 @@ export default function MarketTicker(props: TProps) {
         <span className={classes.ticker__note} aria-hidden>
           MarketFeed → useSyncExternalStore
         </span>
-        <ol className={classes.ticker__tape} aria-label='Последние сделки'>
+        <ol className={classes.ticker__tape} aria-label={t.tape}>
           {slots.map((entry, slot) => (
             <li key={slot} className={clsx(classes.ticker__trade, !entry && !stalled && classes.ticker__trade_empty)}>
               {entry && (
@@ -91,18 +120,18 @@ export default function MarketTicker(props: TProps) {
                   <Label>{entry.trade.qty.toFixed(3)}</Label>
                 </>
               )}
-              {!entry && stalled && slot === 0 && (
-                <Label className={classes.ticker__stalled}>Поток не ответил — полный виджет ниже по ссылке</Label>
-              )}
+              {!entry && stalled && slot === 0 && <Label className={classes.ticker__stalled}>{t.stalled}</Label>}
             </li>
           ))}
         </ol>
       </div>
 
       <figcaption className={classes.ticker__caption}>
-        <span className={classes.ticker__sr}>Схема потока: {PIPELINE}</span>
+        <span className={classes.ticker__sr}>
+          {t.pipeline}: {PIPELINE}
+        </span>
         <Link href='/works#market' className={classes.ticker__link}>
-          <Label>Весь виджет</Label>
+          <Label>{t.widget}</Label>
           <ArrowRightIcon className={classes.ticker__link_icon} aria-hidden />
         </Link>
       </figcaption>

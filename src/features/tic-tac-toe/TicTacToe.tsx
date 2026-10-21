@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 
+import { useLocale } from '@application/locale/LocaleProvider';
+
 import { TicTacToe as Game, TDifficulty, TMark } from '@domain/game/ticTacToe';
 
 import Label from '@ui/atoms/typography/Label';
@@ -28,6 +30,35 @@ const RESTART_DELAY = 2000;
 
 const DIFFICULTIES: readonly TDifficulty[] = ['easy', 'medium', 'hard'];
 
+const MESSAGES = {
+  ru: {
+    won: 'Вы выиграли',
+    lost: 'Компьютер выиграл',
+    draw: 'Ничья',
+    drawLower: 'ничья,',
+    again: 'заново?',
+    againTitle: 'Заново?',
+    play: 'Сыграть в крестики-нолики',
+    hint: 'Сыграйте против ИИ',
+    cell: 'Клетка',
+    x: 'крестик',
+    o: 'нолик',
+  },
+  en: {
+    won: 'You won',
+    lost: 'The computer won',
+    draw: 'Draw',
+    drawLower: 'draw,',
+    again: 'again?',
+    againTitle: 'Again?',
+    play: 'Play tic-tac-toe',
+    hint: 'Play against the AI',
+    cell: 'Cell',
+    x: 'cross',
+    o: 'nought',
+  },
+} as const;
+
 function pickDifficulty(): TDifficulty {
   return DIFFICULTIES[Math.floor(Math.random() * DIFFICULTIES.length)];
 }
@@ -39,6 +70,7 @@ function freshSlot(): TSlot {
 }
 
 export default function TicTacToe() {
+  const t = MESSAGES[useLocale().locale];
   const reducedMotion = usePrefersReducedMotion();
   const [mode, setMode] = useState<'demo' | 'user'>('demo');
   const [capacity, setCapacity] = useState(MAX_BOARDS);
@@ -216,16 +248,17 @@ export default function TicTacToe() {
   };
 
   const winner = userGame.winner;
-  const outcome = winner ? (winner.mark === HUMAN ? 'Вы выиграли' : 'Компьютер выиграл') : userGame.isDraw ? 'Ничья' : '';
+  const outcome = winner ? (winner.mark === HUMAN ? t.won : t.lost) : userGame.isDraw ? t.draw : '';
   const restartNotice = userGame.isDraw ? (
     <>
-      ничья,
+      {t.drawLower}
       <br />
-      заново?
+      {t.again}
     </>
   ) : (
-    'Заново?'
+    t.againTitle
   );
+  const cellLabels = { cell: t.cell, x: t.x, o: t.o };
 
   if (mode === 'demo') {
     return (
@@ -235,7 +268,7 @@ export default function TicTacToe() {
           ref={anchorRef}
           role='button'
           tabIndex={0}
-          aria-label='Сыграть в крестики-нолики'
+          aria-label={t.play}
           onClick={startUserGame}
           onKeyDown={(event) => {
             if (event.key === 'Enter' || event.key === ' ') startUserGame();
@@ -248,13 +281,14 @@ export default function TicTacToe() {
               winningLine={slot.game.winner?.line ?? null}
               disabled
               erasing={slot.erasing}
-              notice={slot.game.isDraw ? 'Ничья' : undefined}
+              notice={slot.game.isDraw ? t.draw : undefined}
+              labels={cellLabels}
             />
           ))}
         </div>
 
         <Label variant='eyebrow' className={classes.tic_tac_toe__hint}>
-          Сыграйте против ИИ
+          {t.hint}
         </Label>
       </div>
     );
@@ -270,11 +304,12 @@ export default function TicTacToe() {
           notice={showRestart ? restartNotice : undefined}
           onNoticeClick={resetUserGame}
           onCellClick={handleCellClick}
+          labels={cellLabels}
         />
       </div>
 
       <Label variant='eyebrow' aria-hidden className={classes.tic_tac_toe__hint_hidden}>
-        Сыграйте против ИИ
+        {t.hint}
       </Label>
 
       <span role='status' aria-live='polite' className={classes.tic_tac_toe__status}>

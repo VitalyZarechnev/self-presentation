@@ -15,10 +15,11 @@ type TProps = {
   notice?: ReactNode;
   onNoticeClick?: () => void;
   onCellClick?: (index: number) => void;
+  labels: { cell: string; x: string; o: string };
 };
 
 export default function Board(props: TProps) {
-  const { cells, winningLine, disabled, erasing, notice, onNoticeClick, onCellClick } = props;
+  const { cells, winningLine, disabled, erasing, notice, onNoticeClick, onCellClick, labels } = props;
 
   return (
     <div className={classes.board}>
@@ -86,7 +87,7 @@ export default function Board(props: TProps) {
             key={index}
             type='button'
             className={classes.board__cell}
-            aria-label={`Клетка ${index + 1}${mark ? (mark === 'x' ? ', крестик' : ', нолик') : ''}`}
+            aria-label={`${labels.cell} ${index + 1}${mark ? `, ${labels[mark]}` : ''}`}
             disabled={disabled || mark !== null}
             onClick={() => onCellClick?.(index)}
           />
