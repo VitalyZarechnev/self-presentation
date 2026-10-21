@@ -8,6 +8,7 @@ Spec for humans and AI agents working in this repo. **Read all of this file befo
 - **No business logic in `/src/ui/**`\*\* — UI is dumb atoms/molecules. Details: [docs/agents/ui.md](./docs/agents/ui.md).
 - **Dependency direction is one-way** (Domain ← Data ← Application/Features). Domain imports from nothing. Details: [docs/agents/architecture.md](./docs/agents/architecture.md).
 - **SCSS modules only, `@use` not `@import`** — shared partials live in `/src/assets/` and resolve via the `@assets/*` alias. Details: [docs/agents/styling.md](./docs/agents/styling.md).
+- **No comments in code** — explain intent through names, types and tests; only tool directives (`eslint-disable-next-line`, `@ts-expect-error`) are allowed. Details: [docs/agents/code-style.md](./docs/agents/code-style.md).
 - **`'use client'` only when needed** (interactivity, browser APIs, hooks). Default to React Server Components.
 - **Path aliases everywhere:** `@app`, `@application`, `@assets`, `@data`, `@domain`, `@errors`, `@features`, `@ui`, `@utils`, `@views`. Defined in `tsconfig.json` + `next.config.ts`. Never use deep relative imports (`../../../`).
 
