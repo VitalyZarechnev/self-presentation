@@ -40,7 +40,6 @@ function pinColor(): string {
   return getComputedStyle(document.documentElement).getPropertyValue('--danger').trim() || '#d64545';
 }
 
-// Label sizes are measured once for collision layout, so a language switch remounts the scene.
 export default function GeoGlobe() {
   const { locale } = useLocale();
   return <GeoGlobeScene key={locale} locale={locale} />;

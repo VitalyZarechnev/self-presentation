@@ -3,8 +3,6 @@ import { TLocale } from '@domain/locale/locale';
 import { TCity } from './tripCities';
 import { trips } from './trips';
 
-// City names double as ids in tripCities and trips, so they stay Russian there;
-// these are their English display names.
 const CITY_EN: Record<string, string> = {
   Томск: 'Tomsk',
   Новосибирск: 'Novosibirsk',

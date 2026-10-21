@@ -6,7 +6,6 @@ import { skillGroups } from './skillGroups';
 const ROOT = process.cwd();
 const read = (file: string): string => readFileSync(join(ROOT, file), 'utf8');
 
-// Skills this site itself is built with, and where the repo proves it.
 const PROVEN_HERE: ReadonlyArray<readonly [string, string, string]> = [
   ['TanStack Query', 'package.json', '"@tanstack/react-query"'],
   ['Zod', 'package.json', '"zod"'],

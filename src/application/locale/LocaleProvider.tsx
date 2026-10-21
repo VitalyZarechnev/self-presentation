@@ -21,8 +21,6 @@ export function useLocalized<C extends TLocalized<unknown>>(content: C): C[TLoca
   return content[useLocale().locale];
 }
 
-// Metadata is prerendered in the default locale and Next streams it in after hydration,
-// so the tab title is re-applied whenever the <head> changes underneath it.
 export function useLocalizedTitle(titles: TLocalized<string>): void {
   const { locale } = useLocale();
   const title = titles[locale];
@@ -38,14 +36,15 @@ export function useLocalizedTitle(titles: TLocalized<string>): void {
   }, [title]);
 }
 
-function persist(locale: TLocale): void {
+function saveChoice(locale: TLocale): void {
   try {
     window.localStorage.setItem(LOCALE_STORAGE_KEY, locale);
   } catch {
-    // Storage can be blocked (private mode, in-app browsers); the choice then lasts for this visit only.
+    return;
   }
+}
 
-  // A shared link may pin the language; keep it truthful instead of fighting the switch on reload.
+function syncQueryParam(locale: TLocale): void {
   const url = new URL(window.location.href);
   if (url.searchParams.has(LOCALE_QUERY_PARAM)) {
     url.searchParams.set(LOCALE_QUERY_PARAM, locale);
@@ -56,7 +55,6 @@ function persist(locale: TLocale): void {
 export default function LocaleProvider({ children }: PropsWithChildren) {
   const [locale, setLocaleState] = useState<TLocale>(DEFAULT_LOCALE);
 
-  // locale-init.js has already chosen the language before paint; hydrate in the default one, then adopt it.
   useIsomorphicLayoutEffect(() => {
     const applied = document.documentElement.lang;
     if (isLocale(applied) && applied !== DEFAULT_LOCALE) setLocaleState(applied);
@@ -73,7 +71,8 @@ export default function LocaleProvider({ children }: PropsWithChildren) {
 
   const setLocale = (next: TLocale): void => {
     setLocaleState(next);
-    persist(next);
+    saveChoice(next);
+    syncQueryParam(next);
   };
 
   return <LocaleContext.Provider value={{ locale, setLocale }}>{children}</LocaleContext.Provider>;

@@ -58,7 +58,6 @@ const TITLES_EN: Record<string, string> = {
   management: 'Management',
 };
 
-// Tool names stay as they are; only the Russian words are translated.
 const ITEMS_EN: Record<string, string> = {
   БЭМ: 'BEM',
   'Кроссбраузерная вёрстка': 'Cross-browser layout',

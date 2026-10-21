@@ -12,7 +12,6 @@ const VEIL = 'color-mix(in oklab, var(--surface) 70%, transparent)';
 
 const percent = (hue: number): string => `${((hue / HUE_MAX) * 100).toFixed(2)}%`;
 
-// A band may cross 0°, so it is drawn as up to two segments of the 0–359 track.
 function bandSegments({ from, to }: THueBand): Array<[number, number]> {
   if (from < 0)
     return [

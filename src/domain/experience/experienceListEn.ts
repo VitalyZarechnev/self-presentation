@@ -8,8 +8,6 @@ export type TExperienceCopy = Pick<TExperience, 'achievements' | 'keyResults'> &
   projects?: readonly TProjectCopy[];
 };
 
-// English prose for experienceList; dates, roles, stacks and ids come from the Russian source.
-// Company names change only where the original is written in Cyrillic.
 export const EXPERIENCE_COPY_EN: Record<string, TExperienceCopy> = {
   'betting-software': {
     location: 'Tomsk',

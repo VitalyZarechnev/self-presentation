@@ -4,7 +4,6 @@
   display: inline-flex;
   align-items: center;
   padding: 4px 8px;
-  // Muted ink alone sits at 4.2:1 on the soft accent fill; a share of full ink keeps 11px text above 4.5:1.
   color: color-mix(in oklab, var(--ink-muted) 75%, var(--ink));
   background: var(--accent-soft);
   border: 1px solid var(--line);

@@ -1,7 +1,6 @@
 import react from '@vitejs/plugin-react';
 import { defineConfig, Plugin } from 'vitest/config';
 
-// Next imports SVGs as React components through @svgr/webpack; tests get a plain <svg> with the same props.
 const svgComponentStub: Plugin = {
   name: 'svg-component-stub',
   enforce: 'pre',

@@ -1,6 +1,5 @@
 import { TLocale } from '@domain/locale/locale';
 
-// Shared with public/locale-init.js, which runs before React and cannot import this file.
 export const LOCALE_STORAGE_KEY = 'ui-lang';
 export const LOCALE_QUERY_PARAM = 'lang';
 
