@@ -6,6 +6,7 @@ import { categoryTotals } from '@domain/bank/operations';
 
 import classes from './AnalyticsScreen.module.scss';
 import { CATEGORY_META } from './categoryMeta';
+import { useBankCopy } from './copy';
 import { formatMoney } from './format';
 import { TScreenProps } from './types';
 import OperationRow from './ui/OperationRow';
@@ -18,6 +19,8 @@ const ACTIVE_WIDTH = 23;
 
 export default function AnalyticsScreen({ state, onOpenOperation }: TScreenProps) {
   const [active, setActive] = useState<TTransactionCategory | null>(null);
+  const copy = useBankCopy();
+  const t = copy.analytics;
   const totals = categoryTotals(state.transactions);
   const sum = totals.reduce((acc, item) => acc + item.total, 0);
 
@@ -29,17 +32,17 @@ export default function AnalyticsScreen({ state, onOpenOperation }: TScreenProps
   }));
 
   const centerTotal = active ? (totals.find((item) => item.category === active)?.total ?? 0) : sum;
-  const centerLabel = active ? CATEGORY_META[active].label : 'всего';
+  const centerLabel = active ? copy.categories[active] : t.total;
 
   const toggle = (category: TTransactionCategory): void => setActive((current) => (current === category ? null : category));
 
   return (
     <>
-      <ScreenHead title='Аналитика' />
-      <p className={classes.subTitle}>Траты по категориям</p>
+      <ScreenHead title={t.title} />
+      <p className={classes.subTitle}>{t.byCategory}</p>
 
       <div className={classes.donutWrap}>
-        <svg viewBox='0 0 120 120' className={classes.donut} role='img' aria-label='Траты по категориям'>
+        <svg viewBox='0 0 120 120' className={classes.donut} role='img' aria-label={t.byCategory}>
           <circle cx='60' cy='60' r={RADIUS} fill='none' stroke='#ececef' strokeWidth={BASE_WIDTH} />
           <g transform='rotate(-90 60 60)' fill='none'>
             {segments.map((segment) => {
@@ -63,7 +66,7 @@ export default function AnalyticsScreen({ state, onOpenOperation }: TScreenProps
         </svg>
         <div className={classes.donutCenter}>
           <span className={classes.donutLabel}>{centerLabel}</span>
-          <span className={classes.donutTotal}>{formatMoney(centerTotal)}</span>
+          <span className={classes.donutTotal}>{formatMoney(centerTotal, copy.intl)}</span>
         </div>
       </div>
 
@@ -76,13 +79,13 @@ export default function AnalyticsScreen({ state, onOpenOperation }: TScreenProps
             onClick={() => toggle(item.category)}
           >
             <span className={classes.dot} style={{ background: CATEGORY_META[item.category].color }} />
-            <span className={classes.legendLabel}>{CATEGORY_META[item.category].label}</span>
-            <span className={classes.legendVal}>{formatMoney(item.total)}</span>
+            <span className={classes.legendLabel}>{copy.categories[item.category]}</span>
+            <span className={classes.legendVal}>{formatMoney(item.total, copy.intl)}</span>
           </button>
         ))}
       </div>
 
-      <p className={classes.opsHead}>Все операции</p>
+      <p className={classes.opsHead}>{t.all}</p>
       <div>
         {state.transactions.map((tx) => (
           <OperationRow key={tx.id} tx={tx} onClick={() => onOpenOperation(tx)} />

@@ -1,7 +1,10 @@
+import { useBankCopy } from '../copy';
 import PrimaryButton from './PrimaryButton';
 import classes from './SuccessView.module.scss';
 
 export default function SuccessView({ title, subtitle, onDone }: { title: string; subtitle: string; onDone: () => void }) {
+  const copy = useBankCopy();
+
   return (
     <div className={classes.success}>
       <span className={classes.check}>
@@ -11,7 +14,7 @@ export default function SuccessView({ title, subtitle, onDone }: { title: string
       </span>
       <p className={classes.title}>{title}</p>
       <p className={classes.subtitle}>{subtitle}</p>
-      <PrimaryButton onClick={onDone}>Готово</PrimaryButton>
+      <PrimaryButton onClick={onDone}>{copy.done}</PrimaryButton>
     </div>
   );
 }

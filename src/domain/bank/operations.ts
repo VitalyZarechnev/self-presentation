@@ -5,6 +5,8 @@ export const INSURANCE_PREMIUM = 20000;
 
 export type TTxMeta = { id: string; timestamp: number };
 
+export type TBankError = 'amount' | 'funds' | 'recipient';
+
 export type TCategoryTotal = { category: TTransactionCategory; total: number };
 
 function prepend(state: TBankState, tx: TTransaction): TBankState {
@@ -14,21 +16,21 @@ function prepend(state: TBankState, tx: TTransaction): TBankState {
   };
 }
 
-export function validateSpend(state: TBankState, amount: number): string | null {
-  if (!Number.isFinite(amount) || amount <= 0) return 'Введите сумму больше нуля';
-  if (amount > state.account.balance) return 'Недостаточно средств';
+export function validateSpend(state: TBankState, amount: number): TBankError | null {
+  if (!Number.isFinite(amount) || amount <= 0) return 'amount';
+  if (amount > state.account.balance) return 'funds';
   return null;
 }
 
-export function validateTransfer(state: TBankState, recipient: string, amount: number): string | null {
-  if (!recipient.trim()) return 'Укажите получателя';
+export function validateTransfer(state: TBankState, recipient: string, amount: number): TBankError | null {
+  if (!recipient.trim()) return 'recipient';
   return validateSpend(state, amount);
 }
 
 export function transfer(state: TBankState, recipient: string, amount: number, meta: TTxMeta): TBankState {
   return prepend(state, {
     id: meta.id,
-    title: `Перевод · ${recipient.trim()}`,
+    title: recipient.trim(),
     category: 'transfer',
     amount: -amount,
     timestamp: meta.timestamp,
@@ -38,7 +40,7 @@ export function transfer(state: TBankState, recipient: string, amount: number, m
 export function topUp(state: TBankState, amount: number, source: string, meta: TTxMeta): TBankState {
   return prepend(state, {
     id: meta.id,
-    title: source.trim() || 'Пополнение',
+    title: source.trim(),
     category: 'income',
     amount,
     timestamp: meta.timestamp,
@@ -53,7 +55,7 @@ export function activateInsurance(state: TBankState, meta: TTxMeta): TBankState 
   if (state.account.insured) return state;
   const charged = prepend(state, {
     id: meta.id,
-    title: 'Страхование',
+    title: '',
     category: 'insurance',
     amount: -INSURANCE_PREMIUM,
     timestamp: meta.timestamp,
