@@ -24,9 +24,10 @@ export type TTimelineItem = {
 type TProps = {
   items: readonly TTimelineItem[];
   gutter?: number;
+  projectsLabel: string;
 };
 
-export default function Timeline({ items, gutter }: TProps) {
+export default function Timeline({ items, gutter, projectsLabel }: TProps) {
   const [expanded, setExpanded] = useState<ReadonlySet<string>>(() => new Set());
 
   const style = gutter ? ({ '--tl-gutter': `${gutter}px` } as CSSProperties) : undefined;
@@ -108,7 +109,7 @@ export default function Timeline({ items, gutter }: TProps) {
 
                 {open && hasProjects && (
                   <div className={classes.timeline__projects}>
-                    <ProjectList projects={item.projects ?? []} />
+                    <ProjectList projects={item.projects ?? []} title={projectsLabel} />
                   </div>
                 )}
               </li>

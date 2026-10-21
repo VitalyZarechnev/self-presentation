@@ -8,6 +8,7 @@
 - **One module per component — never a shared "kitchen-sink" module.** A component imports only its own `*.module.scss`; it must not reach into a sibling's or a parent's module for classes.
 - Shared partials live under `/src/assets/` (`styles/`, `mixins/`) and are imported via the `@assets/*` alias.
 - Use `@use '@assets/...' as *;` — never `@import`. `@import` is deprecated in Dart Sass and namespaces conflict.
+- **Fonts are self-hosted** in `/src/assets/fonts` (woff2 per subset + `fonts.css` with `@font-face`, metric-matched fallbacks and the `--font-inter` / `--font-playfair` / `--font-plex-mono` variables), imported once in `app/layout.tsx`. No `next/font/google`: the build must not need the network.
 - Theme colors and dimensions come from CSS variables (`var(--bg-message-input)`, `var(--text-secondary)`, …) defined globally — don't hardcode hex codes.
 
 ## `@assets/*` alias

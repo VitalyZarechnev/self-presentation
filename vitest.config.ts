@@ -1,8 +1,17 @@
 import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vitest/config';
+import { defineConfig, Plugin } from 'vitest/config';
+
+const svgComponentStub: Plugin = {
+  name: 'svg-component-stub',
+  enforce: 'pre',
+  load(id) {
+    if (!/\.svg$/.test(id)) return null;
+    return "import { createElement } from 'react'; export default function Svg(props) { return createElement('svg', props); }";
+  },
+};
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [svgComponentStub, react()],
   resolve: {
     // Native tsconfig path resolution (replaces vite-tsconfig-paths plugin).
     tsconfigPaths: true,

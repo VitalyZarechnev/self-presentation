@@ -1,4 +1,8 @@
+'use client';
+
 import { ReactNode } from 'react';
+
+import { useLocale, useLocalizedTitle } from '@application/locale/LocaleProvider';
 
 import Contacts from '@features/contacts/Contacts';
 import Education from '@features/education/Education';
@@ -34,32 +38,55 @@ const SECTION_BODIES: Record<string, ReactNode> = {
 
 const BUILD_YEAR = new Date().getFullYear();
 
+const TITLES = { ru: 'Виталий Заречнев — Senior Frontend Engineer', en: 'Vitaly Zarechnev — Senior Frontend Engineer' };
+
+const MESSAGES = {
+  ru: {
+    title: 'Веду фронтенд от архитектуры до продакшна и команду, которая это делает',
+    lead: 'Clean Architecture — стандарт отдела: старт проектов ×4 быстрее, −40% багов.',
+    demos: 'Смотреть живые демо',
+    experience: 'Опыт',
+    name: 'Виталий Заречнев',
+    byline: 'Senior Frontend Engineer, руковожу командой 4+ года',
+  },
+  en: {
+    title: 'I lead frontend from architecture to production — and the team that builds it',
+    lead: 'Clean Architecture as the department standard: projects start ×4 faster, −40% bugs.',
+    demos: 'See the live demos',
+    experience: 'Experience',
+    name: 'Vitaly Zarechnev',
+    byline: 'Senior Frontend Engineer, leading a team for 4+ years',
+  },
+} as const;
+
 export default function HomeView() {
+  const { locale } = useLocale();
+  const t = MESSAGES[locale];
+  useLocalizedTitle(TITLES);
+
   return (
     <main className={classes.home_view}>
       <SiteHeader />
 
       <section id='content' className={classes.home_view__hero} aria-labelledby='hero-title'>
         <Heading variant='h1' id='hero-title' className={classes.home_view__title}>
-          Архитектура фронтенда, которая держит нагрузку и команду
+          {t.title}
         </Heading>
 
         <div className={classes.home_view__intro}>
-          <Display className={classes.home_view__lead}>
-            Clean Architecture — стандарт отдела: старт проектов ×4 быстрее, −40% багов.
-          </Display>
+          <Display className={classes.home_view__lead}>{t.lead}</Display>
           <div className={classes.home_view__actions}>
             <ActionButton href='#works' variant='primary'>
-              Смотреть живые демо
+              {t.demos}
               <ArrowRightIcon className={classes.home_view__action_icon} aria-hidden />
             </ActionButton>
             <ActionButton href='#experience' variant='secondary'>
-              Опыт
+              {t.experience}
               <ArrowDownIcon className={classes.home_view__action_icon} aria-hidden />
             </ActionButton>
           </div>
           <Content as='p' size='mini' className={classes.home_view__byline}>
-            <strong className={classes.home_view__name}>Виталий Заречнев</strong> — Senior Frontend Engineer, руковожу командой 4+ года
+            <strong className={classes.home_view__name}>{t.name}</strong> — {t.byline}
           </Content>
         </div>
 
@@ -67,7 +94,7 @@ export default function HomeView() {
       </section>
 
       <div className={classes.home_view__content}>
-        {sectionsMeta.map((section) => (
+        {sectionsMeta[locale].map((section) => (
           <section key={section.id} id={section.id} className={classes.home_view__section}>
             <div className={classes.home_view__section_head}>
               <Label variant='index' className={classes.home_view__section_index}>
@@ -89,7 +116,9 @@ export default function HomeView() {
       </div>
       <footer className={classes.home_view__footer}>
         <SiteSourceLink />
-        <Label as='p'>© {BUILD_YEAR} Виталий Заречнев</Label>
+        <Label as='p'>
+          © {BUILD_YEAR} {t.name}
+        </Label>
       </footer>
     </main>
   );

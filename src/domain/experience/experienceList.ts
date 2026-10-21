@@ -1,6 +1,9 @@
+import { TLocalized } from '@domain/locale/locale';
+
+import { EXPERIENCE_COPY_EN } from './experienceListEn';
 import { TExperience } from './models/Experience';
 
-export const experienceList: readonly TExperience[] = [
+const experienceRu: readonly TExperience[] = [
   {
     id: 'betting-software',
     company: 'Betting Software',
@@ -180,3 +183,18 @@ export const experienceList: readonly TExperience[] = [
     ],
   },
 ];
+
+function translate(item: TExperience): TExperience {
+  const copy = EXPERIENCE_COPY_EN[item.id];
+  if (!copy) return item;
+  return {
+    ...item,
+    company: copy.company ?? item.company,
+    location: item.location && (copy.location ?? item.location),
+    achievements: copy.achievements ?? item.achievements,
+    keyResults: copy.keyResults ?? item.keyResults,
+    projects: item.projects?.map((project, index) => ({ ...project, ...copy.projects?.[index] })),
+  };
+}
+
+export const experienceList: TLocalized<readonly TExperience[]> = { ru: experienceRu, en: experienceRu.map(translate) };

@@ -20,9 +20,10 @@ export type TProjectView = {
 
 type TProps = {
   projects: readonly TProjectView[];
+  title: string;
 };
 
-export default function ProjectList({ projects }: TProps) {
+export default function ProjectList({ projects, title }: TProps) {
   const [open, setOpen] = useState(false);
 
   if (projects.length === 0) return null;
@@ -30,7 +31,9 @@ export default function ProjectList({ projects }: TProps) {
   return (
     <div className={classes.projects}>
       <button type='button' className={classes.projects__toggle} aria-expanded={open} onClick={() => setOpen((prev) => !prev)}>
-        <Label className={classes.projects__title}>Проекты · {projects.length}</Label>
+        <Label className={classes.projects__title}>
+          {title} · {projects.length}
+        </Label>
         <ChevronDownIcon className={clsx(classes.projects__chevron, open && classes.projects__chevron_open)} />
       </button>
 

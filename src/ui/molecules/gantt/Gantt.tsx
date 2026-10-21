@@ -55,9 +55,10 @@ type TProps = {
   ticks: readonly TGanttTick[];
   gridStep: number;
   legend?: readonly TGanttLegendItem[];
+  labels: { more: string; projects: string };
 };
 
-export default function Gantt({ rows, ticks, gridStep, legend }: TProps) {
+export default function Gantt({ rows, ticks, gridStep, legend, labels }: TProps) {
   const [expanded, setExpanded] = useState<ReadonlySet<string>>(() => new Set());
 
   const trackStyle = { '--gantt-grid': pct(gridStep) } as CSSProperties;
@@ -153,7 +154,7 @@ export default function Gantt({ rows, ticks, gridStep, legend }: TProps) {
                     type='button'
                     className={clsx(classes.gantt__row, classes.gantt__row_button)}
                     aria-expanded={open}
-                    aria-label={`Подробнее: ${row.title}`}
+                    aria-label={`${labels.more}: ${row.title}`}
                     onClick={() => toggle(row.id)}
                   >
                     {renderLine(row, open)}
@@ -184,7 +185,7 @@ export default function Gantt({ rows, ticks, gridStep, legend }: TProps) {
 
                 {open && hasProjects && (
                   <div className={classes.gantt__projects}>
-                    <ProjectList projects={row.projects ?? []} />
+                    <ProjectList projects={row.projects ?? []} title={labels.projects} />
                   </div>
                 )}
               </div>

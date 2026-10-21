@@ -1,20 +1,22 @@
+import { TLocalized } from '@domain/locale/locale';
+
 import { TSkillGroup } from './models/SkillGroup';
 
-export const skillGroups: readonly TSkillGroup[] = [
+const skillGroupsRu: readonly TSkillGroup[] = [
   {
     id: 'languages',
     title: 'Языки и фреймворки',
-    items: ['JavaScript', 'TypeScript', 'React', 'Next.js', 'Vue.js', 'Node.js'],
+    items: ['TypeScript', 'JavaScript', 'React', 'Next.js', 'Node.js', 'Vue.js'],
   },
   {
     id: 'state',
     title: 'Состояние и данные',
-    items: ['Redux', 'Redux-Saga', 'MobX', 'Pinia', 'GraphQL', 'WebSocket', 'SSE'],
+    items: ['TanStack Query', 'MobX', 'Zod', 'WebSocket', 'SSE', 'GraphQL', 'Redux', 'Redux-Saga', 'Pinia'],
   },
   {
     id: 'ui',
     title: 'UI и стилизация',
-    items: ['SCSS', 'Stylus', 'Tailwind', 'MUI', 'Ant Design', 'Chakra UI', 'Radix UI', 'БЭМ'],
+    items: ['SCSS Modules', 'Radix UI', 'Tailwind', 'MUI', 'Ant Design', 'Chakra UI', 'Stylus', 'БЭМ'],
   },
   {
     id: 'graphics',
@@ -24,7 +26,21 @@ export const skillGroups: readonly TSkillGroup[] = [
   {
     id: 'tooling',
     title: 'Инструменты и качество',
-    items: ['Webpack', 'Single-SPA', 'Git', 'Jest', 'Enzyme', 'SSR', 'Кроссбраузерная вёрстка'],
+    items: [
+      'Clean Architecture',
+      'Vitest',
+      'Testing Library',
+      'React Compiler',
+      'ESLint',
+      'GitHub Actions',
+      'SSR',
+      'Git',
+      'Кроссбраузерная вёрстка',
+      'Webpack',
+      'Single-SPA',
+      'Jest',
+      'Enzyme',
+    ],
   },
   {
     id: 'management',
@@ -32,3 +48,30 @@ export const skillGroups: readonly TSkillGroup[] = [
     items: ['Найм', 'Онбординг', 'Код-ревью', 'Планирование и оценка', 'Развитие команды'],
   },
 ];
+
+const TITLES_EN: Record<string, string> = {
+  languages: 'Languages and frameworks',
+  state: 'State and data',
+  ui: 'UI and styling',
+  graphics: '3D and graphics',
+  tooling: 'Tooling and quality',
+  management: 'Management',
+};
+
+const ITEMS_EN: Record<string, string> = {
+  БЭМ: 'BEM',
+  'Кроссбраузерная вёрстка': 'Cross-browser layout',
+  Найм: 'Hiring',
+  Онбординг: 'Onboarding',
+  'Код-ревью': 'Code review',
+  'Планирование и оценка': 'Planning and estimation',
+  'Развитие команды': 'Growing the team',
+};
+
+const skillGroupsEn: readonly TSkillGroup[] = skillGroupsRu.map((group) => ({
+  ...group,
+  title: TITLES_EN[group.id] ?? group.title,
+  items: group.items.map((item) => ITEMS_EN[item] ?? item),
+}));
+
+export const skillGroups: TLocalized<readonly TSkillGroup[]> = { ru: skillGroupsRu, en: skillGroupsEn };

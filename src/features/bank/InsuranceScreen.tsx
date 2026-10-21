@@ -2,6 +2,7 @@ import { INSURANCE_PREMIUM } from '@domain/bank/operations';
 
 import Shield from '@ui/icons/shield.svg';
 
+import { useBankCopy } from './copy';
 import { formatMoney } from './format';
 import classes from './InsuranceScreen.module.scss';
 import { TScreenProps } from './types';
@@ -11,41 +12,42 @@ import ScreenHead from './ui/ScreenHead';
 
 export default function InsuranceScreen({ state, actions }: TScreenProps) {
   const insured = state.account.insured;
-
-  const insurancetext =
-    'Делаете взнос и Вы уже клиент страховой фирмы Альбатрос.\nДвадцать тысяч в год — полный комплект в пакете: Травмы, болезни и даже смерть';
+  const copy = useBankCopy();
+  const t = copy.insurance;
 
   return (
     <>
-      <ScreenHead title='Страхование' />
+      <ScreenHead title={t.title} />
 
       <div className={classes.insHero}>
         <span className={classes.insHeroIcon}>
           <Shield />
         </span>
-        <p className={classes.insHeroTitle}>Страхование здоровья</p>
-        <p className={classes.insHeroSub}>{insurancetext}</p>
-        <Badge className={classes.heroBadge}>{formatMoney(INSURANCE_PREMIUM)} в год</Badge>
+        <p className={classes.insHeroTitle}>{t.heroTitle}</p>
+        <p className={classes.insHeroSub}>{t.text}</p>
+        <Badge className={classes.heroBadge}>
+          {formatMoney(INSURANCE_PREMIUM, copy.intl)} {t.perYear}
+        </Badge>
         {insured ? (
           <div className={classes.insActive}>
             <svg viewBox='0 0 24 24' fill='none' aria-hidden>
               <path d='M5 12.5l4.5 4.5L19 7.5' stroke='currentColor' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round' />
             </svg>
-            Подключено
+            {t.active}
           </div>
         ) : (
-          <PrimaryButton onClick={actions.insure}>Оформить в один клик</PrimaryButton>
+          <PrimaryButton onClick={actions.insure}>{t.buy}</PrimaryButton>
         )}
       </div>
 
-      <p className={classes.subTitle}>Другие продукты</p>
+      <p className={classes.subTitle}>{t.others}</p>
       <div className={classes.product}>
-        <span>Страхование путешествий</span>
-        <Badge variant='muted'>скоро</Badge>
+        <span>{t.travel}</span>
+        <Badge variant='muted'>{t.soon}</Badge>
       </div>
       <div className={classes.product}>
-        <span>Страхование карты</span>
-        <Badge variant='muted'>скоро</Badge>
+        <span>{t.cardCover}</span>
+        <Badge variant='muted'>{t.soon}</Badge>
       </div>
     </>
   );

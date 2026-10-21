@@ -1,8 +1,9 @@
 import { useState } from 'react';
 
+import { useBankCopy } from './copy';
 import { formatMoney } from './format';
 import classes from './TopUpScreen.module.scss';
-import { describeSource, formatDetail, TOPUP_SOURCES, TTopUpSource, validateDetail } from './topupSources';
+import { describeSource, formatDetail, isDetailValid, TOPUP_SOURCES, TTopUpSource } from './topupSources';
 import { TScreenProps } from './types';
 import PresetChips from './ui/PresetChips';
 import PrimaryButton from './ui/PrimaryButton';
@@ -18,12 +19,15 @@ export default function TopUpScreen({ actions, navigate }: TScreenProps) {
   const [detail, setDetail] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState<{ amount: number; source: string } | null>(null);
+  const copy = useBankCopy();
+  const t = copy.topUp;
+  const sourceCopy = t.sources[source.id];
 
   if (done) {
     return (
       <>
-        <ScreenHead title='Пополнение' />
-        <SuccessView title='Счёт пополнен' subtitle={`${formatMoney(done.amount)} · ${done.source}`} onDone={() => navigate('home')} />
+        <ScreenHead title={t.title} />
+        <SuccessView title={t.done} subtitle={`${formatMoney(done.amount, copy.intl)} · ${done.source}`} onDone={() => navigate('home')} />
       </>
     );
   }
@@ -31,25 +35,24 @@ export default function TopUpScreen({ actions, navigate }: TScreenProps) {
   const submit = (): void => {
     const value = Number(amount);
     if (!value || value <= 0) {
-      setError('Введите сумму больше нуля');
+      setError(copy.errors.amount);
       return;
     }
-    const detailError = validateDetail(source, detail);
-    if (detailError) {
-      setError(detailError);
+    if (!isDetailValid(source, detail)) {
+      setError(t.detailErrors[source.id]);
       return;
     }
-    const described = describeSource(source, detail);
+    const described = describeSource(source, sourceCopy.label, detail);
     actions.topUp(value, described);
     setDone({ amount: value, source: described });
   };
 
   return (
     <>
-      <ScreenHead title='Пополнение' onBack={() => navigate('home')} />
+      <ScreenHead title={t.title} onBack={() => navigate('home')} />
       <div className={classes.form}>
         <TextField
-          label='Сумма'
+          label={t.amount}
           value={amount}
           inputMode='numeric'
           placeholder='0 ₽'
@@ -60,18 +63,18 @@ export default function TopUpScreen({ actions, navigate }: TScreenProps) {
         />
         <PresetChips
           options={PRESETS}
-          format={(preset) => Number(preset).toLocaleString('ru-RU')}
+          format={(preset) => Number(preset).toLocaleString(copy.intl)}
           onSelect={(preset) => {
             setAmount(String(preset));
             setError(null);
           }}
         />
         <PresetChips
-          label='Источник'
-          options={TOPUP_SOURCES.map((item) => item.label)}
-          value={source.label}
+          label={t.source}
+          options={TOPUP_SOURCES.map((item) => t.sources[item.id].label)}
+          value={sourceCopy.label}
           onSelect={(option) => {
-            const next = TOPUP_SOURCES.find((item) => item.label === option);
+            const next = TOPUP_SOURCES.find((item) => t.sources[item.id].label === option);
             if (!next) return;
             setSource(next);
             setDetail('');
@@ -79,7 +82,7 @@ export default function TopUpScreen({ actions, navigate }: TScreenProps) {
           }}
         />
         <TextField
-          label={source.fieldLabel}
+          label={sourceCopy.field}
           value={detail}
           inputMode={source.inputMode}
           placeholder={source.placeholder}
@@ -89,7 +92,7 @@ export default function TopUpScreen({ actions, navigate }: TScreenProps) {
           }}
         />
         {error && <p className={classes.error}>{error}</p>}
-        <PrimaryButton onClick={submit}>Пополнить</PrimaryButton>
+        <PrimaryButton onClick={submit}>{t.submit}</PrimaryButton>
       </div>
     </>
   );

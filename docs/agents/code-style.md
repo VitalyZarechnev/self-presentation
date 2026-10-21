@@ -12,6 +12,7 @@
 - **Enums:** PascalCase enum name; `SCREAMING_SNAKE_CASE` members; runtime values in `snake_case` strings.
 - **Constants:** `SCREAMING_SNAKE_CASE` for module-level `export const` values.
 - **Domain models:** Zod schema as `EntityModel`; inferred type as `TEntity` via `z.infer<typeof EntityModel>`.
+- **No comments in code** (`*.ts`, `*.tsx`, `*.js`, `*.scss`): names, types and tests carry the intent. Only tool directives (`eslint-disable-next-line`, `@ts-expect-error`) are allowed.
 
 ## Component template
 

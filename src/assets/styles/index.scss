@@ -1,5 +1,6 @@
 @use './colors' as *;
 @use './themes' as *;
+@use './locale-loader';
 
 * {
   box-sizing: border-box;

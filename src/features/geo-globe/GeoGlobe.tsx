@@ -3,9 +3,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 
+import { useLocale } from '@application/locale/LocaleProvider';
 import { useTheme } from '@application/theme/ThemeProvider';
 
+import { cityName, tripTitle } from '@domain/geo/geoNames';
 import { tripCities } from '@domain/geo/tripCities';
+import { TLocale } from '@domain/locale/locale';
 
 import Label from '@ui/atoms/typography/Label';
 
@@ -20,11 +23,30 @@ const HOME_CITY = tripCities.find((city) => city.home) ?? tripCities[0];
 
 const INITIAL_TIMELINE: TTimelineInfo = { t: 0, playing: true, follow: true, tripIndex: null, tripTitle: null, currentTime: null };
 
+const MESSAGES = {
+  ru: {
+    globe: 'Интерактивный глобус с городами из поездок',
+    hint: 'тяни — вращать · Ctrl+колесо / пинч — зум · клик — город',
+    follow: 'Камера закреплена за транспортом. Открепите её кнопкой ⌖, чтобы вращать глобус.',
+  },
+  en: {
+    globe: 'Interactive globe with cities from my trips',
+    hint: 'drag — rotate · Ctrl+wheel / pinch — zoom · click — city',
+    follow: 'The camera follows the vehicle. Unpin it with the ⌖ button to rotate the globe.',
+  },
+} as const;
+
 function pinColor(): string {
   return getComputedStyle(document.documentElement).getPropertyValue('--danger').trim() || '#d64545';
 }
 
 export default function GeoGlobe() {
+  const { locale } = useLocale();
+  return <GeoGlobeScene key={locale} locale={locale} />;
+}
+
+function GeoGlobeScene({ locale }: { locale: TLocale }) {
+  const t = MESSAGES[locale];
   const { theme } = useTheme();
   const mountRef = useRef<HTMLDivElement>(null);
   const labelRefs = useRef<(HTMLSpanElement | null)[]>([]);
@@ -84,14 +106,14 @@ export default function GeoGlobe() {
         playing={timeline.playing}
         progress={timeline.t}
         follow={timeline.follow}
-        tripTitle={timeline.tripTitle}
+        tripTitle={timeline.tripTitle && tripTitle(timeline.tripTitle, locale)}
         currentTime={timeline.currentTime}
         onTogglePlay={() => controllerRef.current?.setTimelinePlaying(!timeline.playing)}
         onToggleFollow={() => controllerRef.current?.setCameraFollow(!timeline.follow)}
         onScrub={(t) => controllerRef.current?.setTimelineProgress(t)}
       />
       <div className={classes.globe__viewport}>
-        <div className={classes.globe__stage} ref={mountRef} role='img' aria-label='Интерактивный глобус с городами из поездок' />
+        <div className={classes.globe__stage} ref={mountRef} role='img' aria-label={t.globe} />
         <div className={classes.globe__labels} aria-hidden>
           {tripCities.map((city, index) => (
             <Label
@@ -101,18 +123,18 @@ export default function GeoGlobe() {
               }}
               className={clsx(classes.globe__label, city.important && classes.globe__label_important)}
             >
-              {city.name}
+              {cityName(city.name, locale)}
             </Label>
           ))}
         </div>
         {selected === null ? (
-          <Label className={classes.globe__hint}>тяни — вращать · Ctrl+колесо / пинч — зум · клик — город</Label>
+          <Label className={classes.globe__hint}>{t.hint}</Label>
         ) : (
-          <TripCard city={tripCities[selected]} home={HOME_CITY} onClose={() => setSelected(null)} />
+          <TripCard city={tripCities[selected]} home={HOME_CITY} locale={locale} onClose={() => setSelected(null)} />
         )}
         {followHint && timeline.follow && (
           <Label as='div' className={classes.globe__follow_hint} role='status'>
-            Камера закреплена за транспортом. Открепите её кнопкой ⌖, чтобы вращать глобус.
+            {t.follow}
           </Label>
         )}
       </div>

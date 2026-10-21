@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import clsx from 'clsx';
 
+import { useLocale } from '@application/locale/LocaleProvider';
+
 import { SITE_SOURCE_URL, siteAspectList } from '@domain/site-case/siteAspectList';
 
 import ActionButton from '@ui/atoms/action-button/ActionButton';
@@ -17,10 +19,12 @@ import classes from './SiteCase.module.scss';
 import TokenSandbox from './TokenSandbox';
 import TokenTable from './TokenTable';
 
-const DEFAULT_OPEN = 'themes';
+const NOTHING_OPEN: ReadonlySet<string> = new Set();
+const CODE_CTA = { ru: 'Смотреть код на GitHub', en: 'View the code on GitHub' } as const;
 
 export default function SiteCase() {
-  const [open, setOpen] = useState<ReadonlySet<string>>(() => new Set([DEFAULT_OPEN]));
+  const [open, setOpen] = useState<ReadonlySet<string>>(NOTHING_OPEN);
+  const { locale } = useLocale();
 
   const toggle = (id: string): void => {
     setOpen((prev) => {
@@ -34,7 +38,7 @@ export default function SiteCase() {
   return (
     <div className={classes.site_case}>
       <ul className={classes.site_case__list}>
-        {siteAspectList.map((aspect) => {
+        {siteAspectList[locale].map((aspect) => {
           const expanded = open.has(aspect.id);
           const panelId = `site-case-${aspect.id}`;
 
@@ -91,7 +95,7 @@ export default function SiteCase() {
       </ul>
 
       <ActionButton href={SITE_SOURCE_URL} variant='secondary' target='_blank' rel='noopener noreferrer' className={classes.site_case__cta}>
-        Смотреть код на GitHub
+        {CODE_CTA[locale]}
         <ArrowUpRightIcon className={classes.site_case__cta_icon} aria-hidden />
       </ActionButton>
     </div>

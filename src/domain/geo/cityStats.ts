@@ -15,8 +15,8 @@ export function distanceKm(a: TCoords, b: TCoords): number {
   return 2 * EARTH_RADIUS_KM * Math.asin(Math.min(1, Math.sqrt(h)));
 }
 
-export function hemisphere(city: TCoords): string {
-  const vertical = city.lat >= 0 ? 'Северное' : 'Южное';
-  const horizontal = city.lon >= 0 ? 'Восточное' : 'Западное';
-  return `${vertical} · ${horizontal}`;
+export type THemisphere = { north: boolean; east: boolean };
+
+export function hemisphere(city: TCoords): THemisphere {
+  return { north: city.lat >= 0, east: city.lon >= 0 };
 }

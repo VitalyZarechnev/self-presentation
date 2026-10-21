@@ -27,4 +27,13 @@
       display: block;
     }
   }
+
+  :global(html[data-custom]) & {
+    isolation: isolate;
+    background: var(--accent);
+
+    .preview__image {
+      mix-blend-mode: luminosity;
+    }
+  }
 }

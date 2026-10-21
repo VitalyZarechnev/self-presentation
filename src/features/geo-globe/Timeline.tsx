@@ -1,6 +1,8 @@
 import { PointerEvent as ReactPointerEvent, useRef } from 'react';
 import clsx from 'clsx';
 
+import { useLocale } from '@application/locale/LocaleProvider';
+
 import Label from '@ui/atoms/typography/Label';
 
 import classes from './Timeline.module.scss';
@@ -16,13 +18,26 @@ type TProps = {
   onScrub: (t: number) => void;
 };
 
-const dateFormatter = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+const DATE_FORMAT: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
+
+const MESSAGES = {
+  ru: {
+    intl: 'ru-RU',
+    pause: 'Пауза',
+    play: 'Воспроизвести',
+    unpin: 'Открепить камеру',
+    follow: 'Следить за самолётом',
+    track: 'Таймлайн поездок',
+  },
+  en: { intl: 'en-GB', pause: 'Pause', play: 'Play', unpin: 'Unpin the camera', follow: 'Follow the plane', track: 'Trips timeline' },
+} as const;
 
 function clamp01(value: number): number {
   return Math.max(0, Math.min(1, value));
 }
 
 export default function Timeline({ playing, progress, follow, tripTitle, currentTime, onTogglePlay, onToggleFollow, onScrub }: TProps) {
+  const t = MESSAGES[useLocale().locale];
   const trackRef = useRef<HTMLDivElement>(null);
   const scrubbing = useRef(false);
 
@@ -48,12 +63,12 @@ export default function Timeline({ playing, progress, follow, tripTitle, current
     trackRef.current?.releasePointerCapture(event.pointerId);
   };
 
-  const dateLabel = currentTime === null ? '—' : dateFormatter.format(currentTime);
+  const dateLabel = currentTime === null ? '—' : new Intl.DateTimeFormat(t.intl, DATE_FORMAT).format(currentTime);
   const percent = Math.round(clamp01(progress) * 100);
 
   return (
     <div className={classes.timeline}>
-      <Label as='button' className={classes.timeline__play} onClick={onTogglePlay} aria-label={playing ? 'Пауза' : 'Воспроизвести'}>
+      <Label as='button' className={classes.timeline__play} onClick={onTogglePlay} aria-label={playing ? t.pause : t.play}>
         {playing ? '❚❚' : '▶'}
       </Label>
 
@@ -61,7 +76,7 @@ export default function Timeline({ playing, progress, follow, tripTitle, current
         as='button'
         className={clsx(classes.timeline__play, follow && classes.timeline__play_on)}
         onClick={onToggleFollow}
-        aria-label={follow ? 'Открепить камеру' : 'Следить за самолётом'}
+        aria-label={follow ? t.unpin : t.follow}
         aria-pressed={follow}
       >
         ⌖
@@ -81,7 +96,7 @@ export default function Timeline({ playing, progress, follow, tripTitle, current
           onPointerUp={onPointerUp}
           role='slider'
           tabIndex={0}
-          aria-label='Таймлайн поездок'
+          aria-label={t.track}
           aria-valuemin={0}
           aria-valuemax={100}
           aria-valuenow={percent}
