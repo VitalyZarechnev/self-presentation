@@ -1,7 +1,8 @@
 import { useState } from 'react';
 
-import { validateTransfer } from '@domain/bank/operations';
+import { TBankError, validateTransfer } from '@domain/bank/operations';
 
+import { useBankCopy } from './copy';
 import { formatMoney } from './format';
 import classes from './TransferScreen.module.scss';
 import { TScreenProps } from './types';
@@ -16,16 +17,18 @@ const PRESETS = [500, 1000, 5000];
 export default function TransferScreen({ state, actions, navigate }: TScreenProps) {
   const [recipient, setRecipient] = useState('');
   const [amount, setAmount] = useState('');
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<TBankError | null>(null);
   const [done, setDone] = useState<{ amount: number; recipient: string } | null>(null);
+  const copy = useBankCopy();
+  const t = copy.transfer;
 
   if (done) {
     return (
       <>
-        <ScreenHead title='Перевод' />
+        <ScreenHead title={t.title} />
         <SuccessView
-          title='Перевод отправлен'
-          subtitle={`${formatMoney(done.amount)} · ${done.recipient}`}
+          title={t.sent}
+          subtitle={`${formatMoney(done.amount, copy.intl)} · ${done.recipient}`}
           onDone={() => navigate('home')}
         />
       </>
@@ -45,19 +48,19 @@ export default function TransferScreen({ state, actions, navigate }: TScreenProp
 
   return (
     <>
-      <ScreenHead title='Перевод' onBack={() => navigate('home')} />
+      <ScreenHead title={t.title} onBack={() => navigate('home')} />
       <div className={classes.form}>
         <TextField
-          label='Получатель'
+          label={t.recipient}
           value={recipient}
-          placeholder='Имя или телефон'
+          placeholder={t.recipientPlaceholder}
           onChange={(value) => {
             setRecipient(value);
             setError(null);
           }}
         />
         <TextField
-          label='Сумма'
+          label={t.amount}
           value={amount}
           inputMode='numeric'
           placeholder='0 ₽'
@@ -68,15 +71,17 @@ export default function TransferScreen({ state, actions, navigate }: TScreenProp
         />
         <PresetChips
           options={PRESETS}
-          format={(preset) => Number(preset).toLocaleString('ru-RU')}
+          format={(preset) => Number(preset).toLocaleString(copy.intl)}
           onSelect={(preset) => {
             setAmount(String(preset));
             setError(null);
           }}
         />
-        <p className={classes.hint}>Доступно {formatMoney(state.account.balance)}</p>
-        {error && <p className={classes.error}>{error}</p>}
-        <PrimaryButton onClick={submit}>Перевести</PrimaryButton>
+        <p className={classes.hint}>
+          {t.available} {formatMoney(state.account.balance, copy.intl)}
+        </p>
+        {error && <p className={classes.error}>{copy.errors[error]}</p>}
+        <PrimaryButton onClick={submit}>{t.submit}</PrimaryButton>
       </div>
     </>
   );

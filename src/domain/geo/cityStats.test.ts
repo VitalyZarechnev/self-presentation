@@ -22,7 +22,7 @@ describe('distanceKm', () => {
 
 describe('hemisphere', () => {
   it('labels northern-eastern and southern points', () => {
-    expect(hemisphere({ lat: 56.49, lon: 84.95 })).toBe('Северное · Восточное');
-    expect(hemisphere({ lat: -6.16, lon: 39.19 })).toBe('Южное · Восточное');
+    expect(hemisphere({ lat: 56.49, lon: 84.95 })).toEqual({ north: true, east: true });
+    expect(hemisphere({ lat: -6.16, lon: 39.19 })).toEqual({ north: false, east: true });
   });
 });

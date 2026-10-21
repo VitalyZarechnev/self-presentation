@@ -8,6 +8,7 @@ import LookOn from '@ui/icons/look-on.svg';
 import Plus from '@ui/icons/plus.svg';
 import Shield from '@ui/icons/shield.svg';
 
+import { displayName, useBankCopy } from './copy';
 import { formatMoney } from './format';
 import classes from './HomeScreen.module.scss';
 import { TScreenProps } from './types';
@@ -26,36 +27,41 @@ export default function HomeScreen({ state, navigate, onOpenOperation, animatedB
   const [shown, setShown] = useState(true);
   const balance = animatedBalance;
   const { account, transactions } = state;
+  const copy = useBankCopy();
+  const t = copy.home;
+  const holder = displayName(copy, account.holder);
 
   return (
     <>
       <div className={classes.greeting}>
         <div>
-          <p className={classes.greetSub}>Добрый день</p>
-          <p className={classes.greetName}>{account.holder.split(' ')[0]}</p>
+          <p className={classes.greetSub}>{t.greeting}</p>
+          <p className={classes.greetName}>{holder.split(' ')[0]}</p>
         </div>
-        <span className={classes.avatar}>{initials(account.holder)}</span>
+        <span className={classes.avatar}>{initials(holder)}</span>
       </div>
 
       <div className={classes.balanceCard}>
         <div className={classes.balanceTop}>
-          <span>{account.bank} · счёт</span>
+          <span>
+            {displayName(copy, account.bank)} · {t.account}
+          </span>
           <span>•• {account.cardLast4}</span>
         </div>
         <div className={classes.balanceRow}>
-          <span className={classes.balanceAmount}>{shown ? formatMoney(balance) : '•• ••• ₽'}</span>
-          <button className={classes.eye} onClick={() => setShown((v) => !v)} aria-label={shown ? 'Скрыть баланс' : 'Показать баланс'}>
+          <span className={classes.balanceAmount}>{shown ? formatMoney(balance, copy.intl) : '•• ••• ₽'}</span>
+          <button className={classes.eye} onClick={() => setShown((v) => !v)} aria-label={shown ? t.hide : t.show}>
             {shown ? <LookOn /> : <LookOff />}
           </button>
         </div>
-        <p className={classes.balanceSub}>{account.insured ? 'Карта застрахована' : 'Личный счёт'}</p>
+        <p className={classes.balanceSub}>{account.insured ? t.insured : t.personal}</p>
       </div>
 
       <div className={classes.actions}>
-        <QuickAction icon={<ArrowUpRight />} label='Перевод' onClick={() => navigate('transfer')} />
-        <QuickAction icon={<Plus />} label='Пополнить' onClick={() => navigate('topup')} />
-        <QuickAction icon={<ChartPie />} label='Аналитика' onClick={() => navigate('analytics')} />
-        <QuickAction icon={<CreditCard />} label='Карта' onClick={() => navigate('card')} />
+        <QuickAction icon={<ArrowUpRight />} label={t.transfer} onClick={() => navigate('transfer')} />
+        <QuickAction icon={<Plus />} label={t.topUp} onClick={() => navigate('topup')} />
+        <QuickAction icon={<ChartPie />} label={t.analytics} onClick={() => navigate('analytics')} />
+        <QuickAction icon={<CreditCard />} label={t.card} onClick={() => navigate('card')} />
       </div>
 
       <button className={classes.promo} onClick={() => navigate('insurance')}>
@@ -63,15 +69,15 @@ export default function HomeScreen({ state, navigate, onOpenOperation, animatedB
           <Shield />
         </span>
         <span className={classes.promoText}>
-          <span className={classes.promoTitle}>Страхование</span>
-          <span className={classes.promoSub}>{account.insured ? 'Активна' : 'Защита жизни и здоровья'}</span>
+          <span className={classes.promoTitle}>{t.insurance}</span>
+          <span className={classes.promoSub}>{account.insured ? t.insuranceActive : t.insuranceSub}</span>
         </span>
       </button>
 
       <div className={classes.sectionHead}>
-        <span>Последние операции</span>
+        <span>{t.recent}</span>
         <button className={classes.link} onClick={() => navigate('analytics')}>
-          Все
+          {t.all}
         </button>
       </div>
       <div>

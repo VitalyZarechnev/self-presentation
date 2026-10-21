@@ -14,9 +14,9 @@ const meta = { id: 'tx-1', timestamp: 1000 };
 
 describe('validateTransfer', () => {
   it('rejects empty recipient, non-positive and over-balance amounts', () => {
-    expect(validateTransfer(state(), '', 100)).toBe('Укажите получателя');
-    expect(validateTransfer(state(), 'Иван', 0)).toBe('Введите сумму больше нуля');
-    expect(validateTransfer(state(1000), 'Иван', 5000)).toBe('Недостаточно средств');
+    expect(validateTransfer(state(), '', 100)).toBe('recipient');
+    expect(validateTransfer(state(), 'Иван', 0)).toBe('amount');
+    expect(validateTransfer(state(1000), 'Иван', 5000)).toBe('funds');
   });
 
   it('accepts a valid transfer', () => {
@@ -29,7 +29,7 @@ describe('transfer / topUp', () => {
     const next = transfer(state(1000), 'Иван', 300, meta);
     expect(next.account.balance).toBe(700);
     expect(next.transactions[0]).toMatchObject({ id: 'tx-1', category: 'transfer', amount: -300 });
-    expect(next.transactions[0].title).toContain('Иван');
+    expect(next.transactions[0].title).toBe('Иван');
   });
 
   it('topUp credits the balance', () => {
@@ -58,7 +58,7 @@ describe('activateInsurance', () => {
     const next = activateInsurance(state(1000), meta);
     expect(next.account.insured).toBe(true);
     expect(next.account.balance).toBe(1000 - INSURANCE_PREMIUM);
-    expect(next.transactions[0]).toMatchObject({ category: 'insurance', amount: -INSURANCE_PREMIUM });
+    expect(next.transactions[0]).toMatchObject({ category: 'insurance', amount: -INSURANCE_PREMIUM, title: '' });
   });
 
   it('is a no-op when already insured', () => {

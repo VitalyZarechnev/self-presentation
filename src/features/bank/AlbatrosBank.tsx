@@ -16,6 +16,7 @@ import classes from './AlbatrosBank.module.scss';
 import AnalyticsScreen from './AnalyticsScreen';
 import { bankReducer, txMeta } from './bankReducer';
 import CardScreen from './CardScreen';
+import { useBankCopy } from './copy';
 import HomeScreen from './HomeScreen';
 import InsuranceScreen from './InsuranceScreen';
 import TopUpScreen from './TopUpScreen';
@@ -34,18 +35,19 @@ const SCREENS: Record<TScreen, ComponentType<TScreenProps>> = {
   insurance: InsuranceScreen,
 };
 
-const TABS: { id: TScreen; label: string; Icon: ComponentType }[] = [
-  { id: 'home', label: 'Главный', Icon: Home },
-  { id: 'analytics', label: 'Аналитика', Icon: ChartPie },
-  { id: 'card', label: 'Карта', Icon: CreditCard },
-  { id: 'insurance', label: 'Страховка', Icon: Shield },
-];
+const TABS = [
+  { id: 'home', Icon: Home },
+  { id: 'analytics', Icon: ChartPie },
+  { id: 'card', Icon: CreditCard },
+  { id: 'insurance', Icon: Shield },
+] as const satisfies readonly { id: TScreen; Icon: ComponentType }[];
 
 export default function AlbatrosBank() {
   const initial = useMemo(() => registry.bankDatasource.getState(), []);
   const [state, dispatch] = useReducer(bankReducer, initial);
   const [screen, setScreen] = useState<TScreen>('home');
   const [operation, setOperation] = useState<TTransaction | null>(null);
+  const copy = useBankCopy();
 
   const actions: TBankActions = useMemo(
     () => ({
@@ -70,7 +72,7 @@ export default function AlbatrosBank() {
           </div>
         </div>
         <nav className={classes.nav}>
-          {TABS.map(({ id, label, Icon }) => (
+          {TABS.map(({ id, Icon }) => (
             <button
               key={id}
               className={clsx(classes.tab, activeTab === id && classes.tabOn)}
@@ -78,12 +80,19 @@ export default function AlbatrosBank() {
               onClick={() => setScreen(id)}
             >
               <Icon />
-              {label}
+              {copy.tabs[id]}
             </button>
           ))}
         </nav>
       </div>
-      {operation && <OperationSheet tx={operation} cardLast4={state.account.cardLast4} onClose={() => setOperation(null)} />}
+      {operation && (
+        <OperationSheet
+          tx={operation}
+          cardLast4={state.account.cardLast4}
+          bankName={state.account.bank}
+          onClose={() => setOperation(null)}
+        />
+      )}
     </PhoneFrame>
   );
 }
