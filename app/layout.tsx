@@ -1,12 +1,12 @@
 import { ReactNode } from 'react';
 import type { Metadata } from 'next';
-import { IBM_Plex_Mono, Inter, Playfair_Display } from 'next/font/google';
 
 import ApplicationProvider from '@application/ApplicationProvider';
 import LocaleProvider from '@application/locale/LocaleProvider';
 import ThemeProvider from '@application/theme/ThemeProvider';
 import { DEFAULT_THEME } from '@application/theme/themes';
 
+import '@assets/fonts/fonts.css';
 import '@assets/styles/index.scss';
 
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
@@ -42,30 +42,12 @@ export const metadata: Metadata = {
   },
 };
 
-const inter = Inter({
-  subsets: ['latin', 'cyrillic'],
-  variable: '--font-inter',
-  weight: ['300', '400', '500', '600', '700'],
-});
-
-const playfair = Playfair_Display({
-  subsets: ['latin', 'cyrillic'],
-  variable: '--font-playfair',
-  weight: ['400', '500', '600', '700'],
-});
-
-const plexMono = IBM_Plex_Mono({
-  subsets: ['latin', 'cyrillic'],
-  variable: '--font-plex-mono',
-  weight: ['400', '500', '600'],
-});
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       lang='ru'
       data-theme={DEFAULT_THEME}
-      className={`${inter.variable} ${playfair.variable} ${plexMono.variable}`}
       suppressHydrationWarning
     >
       <head>
