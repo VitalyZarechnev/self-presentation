@@ -45,7 +45,6 @@ export type TStatus = 'danger' | 'positive';
 export type THueBand = { status: TStatus; from: number; to: number };
 export type TClearedHue = { hue: number; avoided: TStatus | null };
 
-// Mirrors --danger / --positive in themes.scss (a test keeps them in sync).
 export const STATUS_COLORS: Record<TTheme, Record<TStatus, string>> = {
   blueprint: { danger: '#ff6b6b', positive: '#5ad38f' },
   'barely-there': { danger: '#d64545', positive: '#2f8f5b' },
@@ -54,7 +53,6 @@ export const STATUS_LABELS: TLocalized<Record<TStatus, string>> = {
   ru: { danger: 'падение', positive: 'рост' },
   en: { danger: 'fall', positive: 'rise' },
 };
-// Data colours own these hues: an accent closer than this reads as a price move.
 export const STATUS_HUE_CLEARANCE = 30;
 
 const FULL_TURN = 360;

@@ -19,7 +19,6 @@ import classes from './LiveDemos.module.scss';
 import { DEMO_PREVIEWS } from './previews';
 
 const PREVIEW_SIZES = '(max-width: 860px) 100vw, 500px';
-// The hero ticker already runs the market demo live, so the section links to it instead of showing a snapshot.
 const HERO_DEMO_ID = 'market';
 
 const MESSAGES = {

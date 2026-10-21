@@ -62,7 +62,6 @@ expect(Math.abs(next / last - 1)).toBeLessThan(MAX_TICK_MOVE);`,
 
 type TAspectCopy = Pick<TSiteAspect, 'title' | 'summary' | 'points'>;
 
-// Code excerpts are quoted from the repository, so only the prose is translated.
 const COPY_EN: Record<string, TAspectCopy> = {
   architecture: {
     title: 'Clean Architecture',

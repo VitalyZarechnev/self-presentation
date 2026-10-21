@@ -1,5 +1,3 @@
-// Grows the touch target to $size without moving layout: an invisible ::after
-// centred on the element. Use where neighbours leave room, e.g. inside a bar.
 @mixin hit-area($size: 44px) {
   position: relative;
 
@@ -14,8 +12,6 @@
   }
 }
 
-// Height-only variant for tight horizontal groups (segmented switches): width
-// keeps to the drawn element so neighbours never steal each other's taps.
 @mixin hit-area-y($size: 44px) {
   position: relative;
 

@@ -1,6 +1,3 @@
-// Runs before first paint. The static HTML is Russian; when another language is asked for
-// (?lang=en in the link, or a saved choice), the page stays behind a loader until React
-// re-renders the text, so the visitor never sees the wrong language flash by.
 (function () {
   var LOCALES = ['ru', 'en'];
   var DEFAULT_LOCALE = 'ru';
@@ -28,7 +25,6 @@
 
     root.lang = locale;
     root.dataset.localePending = locale;
-    // If scripts fail to load, show the page in the default language rather than a loader forever.
     window.setTimeout(function () {
       delete root.dataset.localePending;
     }, FALLBACK_MS);

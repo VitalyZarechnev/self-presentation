@@ -11,7 +11,6 @@ type TBankCopy = {
   tabs: Record<Extract<TScreen, 'home' | 'analytics' | 'card' | 'insurance'>, string>;
   categories: Record<TTransactionCategory, string>;
   errors: Record<TBankError, string>;
-  // The mock data is written in Russian; these are its known names in this language.
   names: Record<string, string>;
   seeds: Record<string, string>;
   back: string;
@@ -279,8 +278,6 @@ export function useBankCopy(): TBankCopy & { locale: TLocale } {
 
 export const displayName = (copy: TBankCopy, name: string): string => copy.names[name] ?? name;
 
-// Titles are stored language-free where the app writes them (a transfer keeps only the recipient,
-// insurance keeps nothing), so the operation reads correctly in whichever language is on.
 export function txTitle(copy: TBankCopy, tx: TTransaction): string {
   if (tx.category === 'transfer') return `${copy.categories.transfer} · ${tx.title}`;
   return copy.seeds[tx.id] ?? (tx.title || copy.categories[tx.category]);

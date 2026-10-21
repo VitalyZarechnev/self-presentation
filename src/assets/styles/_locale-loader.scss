@@ -1,16 +1,11 @@
-// Shown only while public/locale-init.js waits for React to re-render the page in another
-// language. Body content is hidden (not removed); the loader is the page's own drafting grid
-// plus a measuring line on body pseudo-elements, so it needs no markup and paints on frame one.
 $loader-width: 184px;
 $tick: 7px;
 
 html[data-locale-pending] {
   background-color: var(--surface);
-  // The grid fades out from the centre, so the eye lands on the line, not the edges.
   background-image:
     radial-gradient(circle at 50% 50%, transparent 0 140px, var(--surface) min(95vw, 680px)),
     linear-gradient(var(--surface-grid) 1px, transparent 1px), linear-gradient(90deg, var(--surface-grid) 1px, transparent 1px);
-  // Fixed to the viewport: html is as tall as the hidden page, so its centre is far below the fold.
   background-attachment: fixed;
   background-position: center;
   background-size:
@@ -31,7 +26,6 @@ html[data-locale-pending] {
       visibility: visible;
     }
 
-    // A dimension line: end ticks, a 1px rule, and an accent segment tracing along it.
     &::before {
       content: '';
       width: $loader-width;

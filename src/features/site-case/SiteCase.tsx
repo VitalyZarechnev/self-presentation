@@ -19,7 +19,6 @@ import classes from './SiteCase.module.scss';
 import TokenSandbox from './TokenSandbox';
 import TokenTable from './TokenTable';
 
-// Everything starts folded: three one-line summaries read faster than the sandbox, table and code of an open aspect.
 const NOTHING_OPEN: ReadonlySet<string> = new Set();
 const CODE_CTA = { ru: 'Смотреть код на GitHub', en: 'View the code on GitHub' } as const;
 
