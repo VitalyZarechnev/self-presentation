@@ -1,3 +1,5 @@
+import { TLocalized } from '@domain/locale/locale';
+
 import { contrastRatio, hexToOklch, hexToRgba, oklchToHex } from '@utils/color';
 
 import { TTheme } from './themes';
@@ -48,7 +50,10 @@ export const STATUS_COLORS: Record<TTheme, Record<TStatus, string>> = {
   blueprint: { danger: '#ff6b6b', positive: '#5ad38f' },
   'barely-there': { danger: '#d64545', positive: '#2f8f5b' },
 };
-export const STATUS_LABELS: Record<TStatus, string> = { danger: 'падение', positive: 'рост' };
+export const STATUS_LABELS: TLocalized<Record<TStatus, string>> = {
+  ru: { danger: 'падение', positive: 'рост' },
+  en: { danger: 'fall', positive: 'rise' },
+};
 // Data colours own these hues: an accent closer than this reads as a price move.
 export const STATUS_HUE_CLEARANCE = 30;
 

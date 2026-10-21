@@ -20,7 +20,7 @@ const PROVEN_HERE: ReadonlyArray<readonly [string, string, string]> = [
 ];
 
 describe('skillGroups', () => {
-  const items = skillGroups.flatMap((group) => group.items);
+  const items = skillGroups.ru.flatMap((group) => group.items);
 
   test.each(PROVEN_HERE)('%s is listed and used in this repository', (skill, file, evidence) => {
     expect(items).toContain(skill);
@@ -28,9 +28,17 @@ describe('skillGroups', () => {
   });
 
   test('the current stack leads its group, legacy tools close it', () => {
-    const tooling = skillGroups.find((group) => group.id === 'tooling')?.items ?? [];
+    const tooling = skillGroups.ru.find((group) => group.id === 'tooling')?.items ?? [];
     expect(tooling.indexOf('Vitest')).toBeLessThan(tooling.indexOf('Jest'));
     expect(tooling.at(-1)).toBe('Enzyme');
+  });
+
+  test('the English list keeps the same tools and has no Russian left', () => {
+    expect(skillGroups.en.map((group) => group.items.length)).toEqual(skillGroups.ru.map((group) => group.items.length));
+    skillGroups.en.forEach((group) => {
+      expect(group.title).not.toMatch(/[а-яё]/i);
+      group.items.forEach((item) => expect(item).not.toMatch(/[а-яё]/i));
+    });
   });
 
   test('no skill is listed twice', () => {

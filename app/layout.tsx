@@ -3,12 +3,15 @@ import type { Metadata } from 'next';
 import { IBM_Plex_Mono, Inter, Playfair_Display } from 'next/font/google';
 
 import ApplicationProvider from '@application/ApplicationProvider';
+import LocaleProvider from '@application/locale/LocaleProvider';
 import ThemeProvider from '@application/theme/ThemeProvider';
 import { DEFAULT_THEME } from '@application/theme/themes';
 
 import '@assets/styles/index.scss';
 
-const THEME_INIT_SRC = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/theme-init.js`;
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+const THEME_INIT_SRC = `${BASE_PATH}/theme-init.js`;
+const LOCALE_INIT_SRC = `${BASE_PATH}/locale-init.js`;
 
 const TITLE = 'Виталий Заречнев — Senior Frontend Engineer';
 const DESCRIPTION =
@@ -68,10 +71,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <head>
         {/* eslint-disable-next-line @next/next/no-sync-scripts */}
         <script src={THEME_INIT_SRC} />
+        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+        <script src={LOCALE_INIT_SRC} />
       </head>
       <body>
         <ApplicationProvider>
-          <ThemeProvider>{children}</ThemeProvider>
+          <LocaleProvider>
+            <ThemeProvider>{children}</ThemeProvider>
+          </LocaleProvider>
         </ApplicationProvider>
       </body>
     </html>

@@ -1,3 +1,4 @@
+import { TLocalized } from '@domain/locale/locale';
 import { TMarketStatus } from '@domain/market/datasources/IMarketDatasource';
 
 const NO_PRICE = '—';
@@ -15,8 +16,7 @@ export function formatPrice(price: number): string {
   return price ? price.toFixed(1) : NO_PRICE;
 }
 
-export const MARKET_STATUS_LABEL: Record<TMarketStatus, string> = {
-  connecting: 'подключение…',
-  live: 'live · binance',
-  demo: 'демо-поток',
+export const MARKET_STATUS_LABEL: TLocalized<Record<TMarketStatus, string>> = {
+  ru: { connecting: 'подключение…', live: 'live · binance', demo: 'демо-поток' },
+  en: { connecting: 'connecting…', live: 'live · binance', demo: 'demo stream' },
 };

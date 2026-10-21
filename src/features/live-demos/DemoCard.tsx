@@ -1,6 +1,10 @@
+'use client';
+
 import { ReactNode } from 'react';
 import clsx from 'clsx';
 import Link from 'next/link';
+
+import { useLocalized } from '@application/locale/LocaleProvider';
 
 import { TLiveDemo } from '@domain/works/liveDemos';
 
@@ -21,8 +25,11 @@ type TProps = {
   className?: string;
 };
 
+const OPEN_LIVE = { ru: 'Открыть живую версию', en: 'Open the live version' } as const;
+
 export default function DemoCard(props: TProps) {
   const { demo, layout, preview, className } = props;
+  const openLive = useLocalized(OPEN_LIVE);
   const { href } = demo;
 
   return (
@@ -47,7 +54,7 @@ export default function DemoCard(props: TProps) {
         </div>
         {href && (
           <Link href={href} className={classes.card__open}>
-            <Label>Открыть живую версию</Label>
+            <Label>{openLive}</Label>
             <ArrowRightIcon className={classes.card__open_icon} aria-hidden />
           </Link>
         )}

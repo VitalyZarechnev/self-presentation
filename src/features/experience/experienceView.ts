@@ -1,10 +1,24 @@
 import { TExperience, TExperiencePoint, TExperienceProject } from '@domain/experience/models/Experience';
+import { TLocale } from '@domain/locale/locale';
 
 import { TGanttRow, TGanttSegment, TGanttTick } from '@ui/molecules/gantt/Gantt';
 import { TProjectView } from '@ui/molecules/project-list/ProjectList';
 import { TTimelineItem } from '@ui/molecules/timeline/Timeline';
 
-const MONTHS_SHORT = ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
+const COPY = {
+  ru: {
+    months: ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'],
+    now: 'сейчас',
+    preHire: 'до оформления',
+    onStaff: 'в штате с',
+  },
+  en: {
+    months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    now: 'present',
+    preHire: 'before the contract',
+    onStaff: 'on staff from',
+  },
+} as const;
 
 function buildProjects(id: string, projects: readonly TExperienceProject[] | undefined): TProjectView[] {
   return (projects ?? []).map((project, index) => ({
@@ -18,7 +32,10 @@ function buildProjects(id: string, projects: readonly TExperienceProject[] | und
 
 const toMonths = (point: TExperiencePoint): number => point.year * 12 + (point.month - 1) + ((point.day ?? 1) - 1) / 31;
 
-const formatPoint = (point: TExperiencePoint): string => `${MONTHS_SHORT[point.month - 1]}’${String(point.year).slice(2)}`;
+const formatPoint = (point: TExperiencePoint, locale: TLocale): string =>
+  `${COPY[locale].months[point.month - 1]}’${String(point.year).slice(2)}`;
+
+const capitalize = (text: string): string => text.charAt(0).toUpperCase() + text.slice(1);
 
 const pad = (value: number): string => String(value).padStart(2, '0');
 
@@ -35,7 +52,9 @@ type TGanttModel = {
   gridStep: number;
 };
 
-export function buildGantt(items: readonly TExperience[], now: TExperiencePoint): TGanttModel {
+export function buildGantt(items: readonly TExperience[], now: TExperiencePoint, locale: TLocale): TGanttModel {
+  const copy = COPY[locale];
+  const point = (value: TExperiencePoint): string => formatPoint(value, locale);
   const ends = items.map((item) => item.end ?? now);
   const minYear = Math.min(...items.map((item) => item.start.year));
   const maxYear = Math.max(...ends.map((point) => point.year));
@@ -57,7 +76,7 @@ export function buildGantt(items: readonly TExperience[], now: TExperiencePoint)
           start: frac(item.start),
           end: frac(item.officialFrom),
           tone: 'muted',
-          caption: `До оформления: ${formatPoint(item.start)} — в штате с ${formatDate(item.officialFrom)}`,
+          caption: `${capitalize(copy.preHire)}: ${point(item.start)} — ${copy.onStaff} ${formatDate(item.officialFrom)}`,
         });
       }
 
@@ -68,9 +87,9 @@ export function buildGantt(items: readonly TExperience[], now: TExperiencePoint)
         start: frac(item.start),
         end: frac(end),
         ongoing: item.end === null,
-        caption: `${formatPoint(item.start)} — ${item.end ? formatPoint(item.end) : 'сейчас'}`,
+        caption: `${point(item.start)} — ${item.end ? point(item.end) : copy.now}`,
         note: item.officialFrom
-          ? { tone: 'muted' as const, label: `до оформления: ${formatPoint(item.start)} — ${formatPoint(item.officialFrom)}` }
+          ? { tone: 'muted' as const, label: `${copy.preHire}: ${point(item.start)} — ${point(item.officialFrom)}` }
           : undefined,
         segments,
         summary: item.keyResults,
@@ -87,14 +106,14 @@ export function buildGantt(items: readonly TExperience[], now: TExperiencePoint)
   return { rows, ticks, gridStep: 1 / years };
 }
 
-export function buildTimeline(items: readonly TExperience[]): TTimelineItem[] {
+export function buildTimeline(items: readonly TExperience[], locale: TLocale): TTimelineItem[] {
   return [...items]
     .sort((a, b) => toMonths(b.start) - toMonths(a.start))
     .map((item) => ({
       id: item.id,
       title: item.company,
       subtitle: item.role,
-      date: `${item.start.year} — ${item.end ? item.end.year : 'сейчас'}`,
+      date: `${item.start.year} — ${item.end ? item.end.year : COPY[locale].now}`,
       tags: item.stack,
       details: item.achievements,
       projects: buildProjects(item.id, item.projects),

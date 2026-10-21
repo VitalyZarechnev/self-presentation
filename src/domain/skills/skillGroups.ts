@@ -1,6 +1,8 @@
+import { TLocalized } from '@domain/locale/locale';
+
 import { TSkillGroup } from './models/SkillGroup';
 
-export const skillGroups: readonly TSkillGroup[] = [
+const skillGroupsRu: readonly TSkillGroup[] = [
   {
     id: 'languages',
     title: 'Языки и фреймворки',
@@ -46,3 +48,31 @@ export const skillGroups: readonly TSkillGroup[] = [
     items: ['Найм', 'Онбординг', 'Код-ревью', 'Планирование и оценка', 'Развитие команды'],
   },
 ];
+
+const TITLES_EN: Record<string, string> = {
+  languages: 'Languages and frameworks',
+  state: 'State and data',
+  ui: 'UI and styling',
+  graphics: '3D and graphics',
+  tooling: 'Tooling and quality',
+  management: 'Management',
+};
+
+// Tool names stay as they are; only the Russian words are translated.
+const ITEMS_EN: Record<string, string> = {
+  БЭМ: 'BEM',
+  'Кроссбраузерная вёрстка': 'Cross-browser layout',
+  Найм: 'Hiring',
+  Онбординг: 'Onboarding',
+  'Код-ревью': 'Code review',
+  'Планирование и оценка': 'Planning and estimation',
+  'Развитие команды': 'Growing the team',
+};
+
+const skillGroupsEn: readonly TSkillGroup[] = skillGroupsRu.map((group) => ({
+  ...group,
+  title: TITLES_EN[group.id] ?? group.title,
+  items: group.items.map((item) => ITEMS_EN[item] ?? item),
+}));
+
+export const skillGroups: TLocalized<readonly TSkillGroup[]> = { ru: skillGroupsRu, en: skillGroupsEn };

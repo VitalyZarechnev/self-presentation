@@ -3,6 +3,8 @@
 import { CSSProperties, useRef } from 'react';
 import clsx from 'clsx';
 
+import { useLocale } from '@application/locale/LocaleProvider';
+
 import { marketConfig } from '@domain/market/marketConfig';
 
 import Label from '@ui/atoms/typography/Label';
@@ -18,6 +20,7 @@ const TAPE = marketConfig.tape;
 const SPARK_POINTS = 90;
 
 export default function LiveMarket() {
+  const { locale } = useLocale();
   const rootRef = useRef<HTMLDivElement>(null);
   const sparkRef = useRef<HTMLCanvasElement>(null);
   const visible = useIsVisible(rootRef);
@@ -42,14 +45,14 @@ export default function LiveMarket() {
         )}
         <span className={classes.market__status}>
           <b className={clsx(classes.market__dot, snapshot.status === 'live' && classes.market__dot_live)} />
-          <Label>{MARKET_STATUS_LABEL[snapshot.status]}</Label>
+          <Label>{MARKET_STATUS_LABEL[locale][snapshot.status]}</Label>
         </span>
       </div>
 
       <canvas className={classes.market__spark} ref={sparkRef} />
 
       <Label as='div' className={classes.market__tape_head}>
-        Последние сделки
+        {locale === 'ru' ? 'Последние сделки' : 'Latest trades'}
       </Label>
       <div className={classes.market__tape} style={{ '--tape-rows': TAPE } as CSSProperties}>
         {snapshot.tape.map(({ trade }, slot) => (

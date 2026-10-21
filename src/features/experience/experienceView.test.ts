@@ -29,24 +29,25 @@ const items = [
 
 describe('buildGantt pre-hire period', () => {
   test('labels the pre-hire stretch on its own row', () => {
-    const { rows } = buildGantt(items, NOW);
+    const { rows } = buildGantt(items, NOW, 'ru');
     const early = rows.find((row) => row.id === 'early');
 
     expect(early?.note).toEqual({ tone: 'muted', label: 'до оформления: сен’17 — апр’18' });
+    expect(buildGantt(items, NOW, 'en').rows.find((row) => row.id === early?.id)?.note?.label).toBe('before the contract: Sep’17 — Apr’18');
     expect(early?.segments?.[0].tone).toBe('muted');
   });
 
   test('rows without a pre-hire stretch carry no note', () => {
-    const { rows } = buildGantt(items, NOW);
+    const { rows } = buildGantt(items, NOW, 'ru');
     expect(rows.find((row) => row.id === 'later')?.note).toBeUndefined();
   });
 
   test('no global legend that would imply other rows share the pattern', () => {
-    expect(buildGantt(items, NOW)).not.toHaveProperty('legend');
+    expect(buildGantt(items, NOW, 'ru')).not.toHaveProperty('legend');
   });
 
   test('passes key results through as the row summary', () => {
-    const { rows } = buildGantt(items, NOW);
+    const { rows } = buildGantt(items, NOW, 'ru');
     expect(rows.find((row) => row.id === 'later')?.summary).toEqual(['Результат с цифрой']);
     expect(rows.find((row) => row.id === 'early')?.summary).toBeUndefined();
   });
